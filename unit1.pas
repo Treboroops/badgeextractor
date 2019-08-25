@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, StrUtils, dataunit;
+  ExtCtrls, IniPropStorage, StrUtils, dataunit;
 
 type
 
@@ -15,6 +15,7 @@ type
   TForm1 = class(TForm)
     Button1: TButton;
     Button2: TButton;
+    IniPropStorage1: TIniPropStorage;
     Memo1: TMemo;
     OpenDialog1: TOpenDialog;
     procedure Button1Click(Sender: TObject);
@@ -166,11 +167,6 @@ begin
             + 'badges where Type = ''Exploration'' and Description =' +
             QuotedStr(Zones.FieldByName('Description').asString);
           SQLQuery1.Open;
-          If SQLQuery1.RecordCount > 0 then
-            begin
-              Memo1.Lines.add('');
-              Memo1.Lines.add(' ' + Zones.FieldByName('Description').asString);
-            end;
           // now we have a list of exploration badges for this zone
           // see if each badge is in our list
           templist.Clear;
@@ -188,7 +184,17 @@ begin
               templist.add('  ' + SQLQuery1.FieldByName('DisplayName').asString + #9#9 +
                 SQLQuery1.FieldByName('Notes').asString);
             end;
+
             SQLQuery1.Next;
+          end;
+          // if we have badges then list them
+          if templist.Count > 0 then
+          begin
+            Memo1.Lines.add('');
+            Memo1.Lines.add(' ' + Zones.FieldByName('Description').asString);
+
+            Memo1.Lines.AddStrings(templist);
+            templist.Clear;
           end;
           SQLQuery1.Close;
 

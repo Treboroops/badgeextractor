@@ -12,6 +12,7 @@ uses
 {$R *.res}
 
 begin
+  Application.Title:='badgeextractor';
   RequireDerivedFormResource:=True;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
