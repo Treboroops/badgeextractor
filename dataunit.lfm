@@ -1,0 +1,94 @@
+object Data1: TData1
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
+  OldCreateOrder = False
+  Height = 503
+  HorizontalOffset = 1354
+  VerticalOffset = 495
+  Width = 516
+  PPI = 96
+  object DBConnection: TSQLite3Connection
+    Connected = False
+    LoginPrompt = False
+    DatabaseName = './default.sqlite'
+    KeepConnection = False
+    Transaction = SQLTransaction1
+    left = 56
+    top = 32
+  end
+  object Zones: TSQLQuery
+    FieldDefs = <    
+      item
+        Name = 'Description'
+        DataType = ftString
+      end>
+    Database = DBConnection
+    Transaction = SQLTransaction1
+    ReadOnly = True
+    SQL.Strings = (
+      'select distinct Description from badges where Type = ''Exploration'''
+    )
+    Params = <>
+    left = 56
+    top = 152
+  end
+  object SQLTransaction1: TSQLTransaction
+    Active = False
+    Database = DBConnection
+    left = 224
+    top = 112
+  end
+  object SQLQuery1: TSQLQuery
+    FieldDefs = <    
+      item
+        Name = 'Badge'
+        DataType = ftString
+      end    
+      item
+        Name = 'DisplayName'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'Type'
+        DataType = ftString
+      end    
+      item
+        Name = 'Description'
+        DataType = ftString
+      end    
+      item
+        Name = 'Notes'
+        DataType = ftUnknown
+      end    
+      item
+        Name = 'X'
+        DataType = ftString
+      end    
+      item
+        Name = 'Y'
+        DataType = ftString
+      end    
+      item
+        Name = 'Z'
+        DataType = ftString
+      end>
+    Database = DBConnection
+    Transaction = SQLTransaction1
+    ReadOnly = True
+    SQL.Strings = (
+      'select DisplayName from badges'
+    )
+    Params = <>
+    left = 56
+    top = 248
+  end
+  object SQLDBLibraryLoader1: TSQLDBLibraryLoader
+    Enabled = False
+    ConnectionType = 'SQLite3'
+    LibraryName = '/home/tim/src/badgeextractor/libsqlite3.so'
+    left = 224
+    top = 32
+  end
+end

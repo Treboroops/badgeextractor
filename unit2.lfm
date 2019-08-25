@@ -1,0 +1,83 @@
+object Form2: TForm2
+  Left = 619
+  Height = 463
+  Top = 523
+  Width = 841
+  Caption = 'Badge Database'
+  ClientHeight = 463
+  ClientWidth = 841
+  OnCloseQuery = FormCloseQuery
+  LCLVersion = '1.8.4.0'
+  object DBNavigator1: TDBNavigator
+    Left = 88
+    Height = 25
+    Top = 8
+    Width = 241
+    BevelOuter = bvNone
+    ChildSizing.EnlargeHorizontal = crsScaleChilds
+    ChildSizing.EnlargeVertical = crsScaleChilds
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 100
+    ClientHeight = 25
+    ClientWidth = 241
+    DataSource = DataSource1
+    Options = []
+    TabOrder = 0
+  end
+  object Button1: TButton
+    Left = 8
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Connect'
+    OnClick = Button1Click
+    TabOrder = 1
+  end
+  object DBGrid1: TDBGrid
+    Left = 8
+    Height = 408
+    Top = 40
+    Width = 824
+    Color = clWindow
+    Columns = <>
+    DataSource = DataSource1
+    TabOrder = 2
+  end
+  object SQDB1: TSQLite3Connection
+    Connected = False
+    LoginPrompt = False
+    DatabaseName = 'badges.sq3'
+    KeepConnection = False
+    Transaction = SQLTransaction1
+    left = 376
+    top = 156
+  end
+  object SQLTransaction1: TSQLTransaction
+    Active = False
+    Database = SQDB1
+    left = 376
+    top = 224
+  end
+  object SQLQuery1: TSQLQuery
+    FieldDefs = <>
+    Database = SQDB1
+    Transaction = SQLTransaction1
+    Params = <>
+    left = 376
+    top = 296
+  end
+  object DataSource1: TDataSource
+    DataSet = SQLQuery1
+    left = 488
+    top = 156
+  end
+  object SQLDBLibraryLoader1: TSQLDBLibraryLoader
+    Enabled = False
+    ConnectionType = 'SQLite3'
+    LibraryName = 'libsqlite3.so'
+    left = 640
+    top = 156
+  end
+end

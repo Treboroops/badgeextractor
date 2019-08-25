@@ -1,0 +1,53 @@
+object Form1: TForm1
+  Left = 1002
+  Height = 440
+  Top = 270
+  Width = 676
+  Caption = 'Badge Extractor'
+  ClientHeight = 440
+  ClientWidth = 676
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poDefault
+  LCLVersion = '1.8.4.0'
+  object Button1: TButton
+    Left = 8
+    Height = 25
+    Hint = 'Import game chatlog file'
+    Top = 8
+    Width = 75
+    Caption = 'Import File'
+    OnClick = Button1Click
+    TabOrder = 0
+  end
+  object Memo1: TMemo
+    Left = 8
+    Height = 384
+    Top = 40
+    Width = 656
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 1
+    WordWrap = False
+  end
+  object Button2: TButton
+    Left = 88
+    Height = 25
+    Hint = 'Load list of badges for character and list badges needed'
+    Top = 8
+    Width = 72
+    Caption = 'Report'
+    OnClick = Button2Click
+    TabOrder = 2
+  end
+  object OpenDialog1: TOpenDialog
+    Title = 'Open Chat Log File'
+    DefaultExt = '.txt'
+    Filter = '.txt'
+    Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
+    left = 352
+    top = 8
+  end
+end
