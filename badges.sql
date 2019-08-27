@@ -1,8 +1,8 @@
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS `badges` (
 	`Achieved`	TEXT,
-	`Badge`	TEXT,
-	`DisplayName`	TEXT,
+	`Badge`	TEXT UNIQUE COLLATE NOCASE,
+	`DisplayName`	TEXT COLLATE NOCASE,
 	`Type`	TEXT,
 	`Description`	TEXT,
 	`Notes`	TEXT,
@@ -147,7 +147,7 @@ INSERT INTO `badges` VALUES ('False','Busy, Busy Bee','Busy, Busy Bee','Accolade
 INSERT INTO `badges` VALUES ('False','Touched Bottom','Touched Bottom','Accolade','Visit all exploration badges in The Abyss','','','','');
 INSERT INTO `badges` VALUES ('False','Honorary Monster','Honorary Monster','Accolade','Visit all exploration badges in Monster Island','','','','');
 INSERT INTO `badges` VALUES ('False','Free Among the Dead','Free Among the Dead','Accolade','Visit all exploration badges in Dark Astoria','','','','');
-INSERT INTO `badges` VALUES ('False','They are Still Among Us','They are Still Among Us','Accolade','Visit all exploration badges in Rikti War Zone (Issue 25)','','','','');
+INSERT INTO `badges` VALUES ('False','They Are Still Among Us','They Are Still Among Us','Accolade','Visit all exploration badges in Rikti War Zone (Issue 25)','','','','');
 INSERT INTO `badges` VALUES ('False','Crash Landed','Crash Landed','Accolade','(Issue 25) Visit all exploration badges in Echo: Rikti Crash Site','','','','');
 INSERT INTO `badges` VALUES ('False','V.I.P.','V.I.P. / Destined One / (Praetoria''s Son / Daughter)','Accolade','Purchase the City of Heroes Collector''s DVD Edition (Issue 25: Awarded on any character creation)','','','','');
 INSERT INTO `badges` VALUES ('False','Destined One','V.I.P. / Destined One / (Praetoria''s Son / Daughter)','Accolade','Purchase the City of Heroes Collector''s DVD Edition (Issue 25: Awarded on any character creation)','','','','');
@@ -448,7 +448,7 @@ INSERT INTO `badges` VALUES ('False','Unbroken','The Unyielding / Unbroken / Wen
 INSERT INTO `badges` VALUES ('False','Went the Extra Mile','The Unyielding / Unbroken / Went the Extra Mile','Achievement','Pay off 100,000 debt','','','','');
 INSERT INTO `badges` VALUES ('False','The Unbroken Spirit','The Unbroken Spirit (H/V) / Undaunted (P)','Achievement','Pay off 200,000 debt','','','','');
 INSERT INTO `badges` VALUES ('False','Undaunted','The Unbroken Spirit (H/V) / Undaunted (P)','Achievement','Pay off 200,000 debt','','','','');
-INSERT INTO `badges` VALUES ('False','Impulsive','Deathless / Impulsive','Achievement','Pay off 400,000 debt','','','','');
+INSERT INTO `badges` VALUES ('False','Deathless','Deathless / Impulsive','Achievement','Pay off 400,000 debt','','','','');
 INSERT INTO `badges` VALUES ('False','Impulsive','Deathless / Impulsive','Achievement','Pay off 400,000 debt','','','','');
 INSERT INTO `badges` VALUES ('False','Undying','Undying / Never Learns','Achievement','Pay off 600,000 debt','','','','');
 INSERT INTO `badges` VALUES ('False','Never Learns','Undying / Never Learns','Achievement','Pay off 600,000 debt','','','','');
@@ -725,7 +725,6 @@ INSERT INTO `badges` VALUES ('False','City Official','City Official / Ousted Off
 INSERT INTO `badges` VALUES ('False','Ousted Official','City Official / Ousted Official','Day Job','City Hall, Freedom Corps headquarters','Auto: Influence Bonus (Mission Completion)','','','');
 INSERT INTO `badges` VALUES ('False','Clubber','Clubber','Day Job','Pocket D','Auto: +Recovery (Out of Combat)','','','');
 INSERT INTO `badges` VALUES ('False','Cold Hand of Death','Cold Hand of Death','Day Job','Dark Astoria','Auto: Self +Res (Cold/Negative Energy), +Def (Cold/Negative Energy)','','','');
-INSERT INTO `badges` VALUES ('False','Cold Hand of Death','Cold Hand of Death','Day Job','Dark Astoria','Auto: Self +Res (Cold/Negative Energy), +Def (Cold/Negative Energy)','','','');
 INSERT INTO `badges` VALUES ('False','Commuter','Commuter / Fare Jumper','Day Job','Train Stations','Auto: +Movement Speed','','','');
 INSERT INTO `badges` VALUES ('False','Fare Jumper','Commuter / Fare Jumper','Day Job','Train Stations','Auto: +Movement Speed','','','');
 INSERT INTO `badges` VALUES ('False','Crey Test Subject','Crey Test Subject / Crey Employee','Day Job','The Crey building in Nerva Archipelago','Auto: Inspiration Bonus (Mission Completion)','','','');
@@ -852,7 +851,6 @@ INSERT INTO `badges` VALUES ('False','Breathes Easy','Diplomat / Breathes Easy',
 INSERT INTO `badges` VALUES ('False','Eye of the Storm','Eye of the Storm','Defeat','Defeat Maelstrom in an Alignment Mission or a Morality Mission','','','','');
 INSERT INTO `badges` VALUES ('False','Giant Killer','Giant Killer','Defeat','Defeat Jack in Irons, a monster that spawns in Croatoa','','','','');
 INSERT INTO `badges` VALUES ('False','Hammer Down','Hammer Down','Defeat','Defeat the Ghost of Scrapyard, a monster that spawns in Sharkhead Isle','','','','');
-INSERT INTO `badges` VALUES ('False','Heat Seeker','Heat Seeker','Defeat','Defeat the Arachnos Flier during the Statesman Task Force / Grandville','','','','');
 INSERT INTO `badges` VALUES ('False','Heat Seeker','Heat Seeker','Defeat','Defeat the Arachnos Flier during the Statesman Task Force / Grandville','','','','');
 INSERT INTO `badges` VALUES ('False','HellBane','HellBane','Defeat','Defeat Caleb, a monster that spawns in Nerva Archipelago','','','','');
 INSERT INTO `badges` VALUES ('False','Itsy Bitsy','Itsy Bitsy','Defeat','Defeat the Jade Spider in Siren''s Call','','','','');
@@ -1525,7 +1523,6 @@ INSERT INTO `badges` VALUES ('False','Mook Capo','Mook Capo','Gladiator','Mooks'
 INSERT INTO `badges` VALUES ('False','Nemesis Soldier','Nemesis Soldier','Gladiator','Nemesis','Earn the Corrupter Badge','','','');
 INSERT INTO `badges` VALUES ('False','Warhulk','Warhulk','Gladiator','Nemesis','Earn the Meteorologist Badge','','','');
 INSERT INTO `badges` VALUES ('False','Outcast Slugger','Outcast Slugger','Gladiator','Outcasts','Earn the Weatherman / Weathergirl Badge','','','');
-INSERT INTO `badges` VALUES ('False','Outcast Slugger','Outcast Slugger','Gladiator','Outcasts','Earn the Weatherman / Weathergirl Badge','','','');
 INSERT INTO `badges` VALUES ('False','Meson','Meson','Gladiator','Praetorians','Earn the Dimensional Warder Badge','','','');
 INSERT INTO `badges` VALUES ('False','Red Cap','Red Cap','Gladiator','Red Caps','Earn the Toothbreaker Badge','','','');
 INSERT INTO `badges` VALUES ('False','Rikti Drone','Rikti Drone','Gladiator','Rikti','Earn the Savant Badge','','','');
@@ -1548,31 +1545,81 @@ INSERT INTO `badges` VALUES ('False','Wailer','Wailer','Gladiator','Wailers','Ea
 INSERT INTO `badges` VALUES ('False','Wailer Queen','Wailer Queen','Gladiator','Wailers','Earn the Dazed and Confused Badge','','','');
 INSERT INTO `badges` VALUES ('False','Smasher Elite','Smasher Elite','Gladiator','Warriors','Earn the Legionnaire Badge','','','');
 INSERT INTO `badges` VALUES ('False','Snowbeast','Snowbeast','Gladiator','Winter Horde','Earn the Toy Collector Badge','','','');
-INSERT INTO `badges` VALUES ('False','Academic','Academic','History','Peregrine Island','','','','');
-INSERT INTO `badges` VALUES ('False','Alumnus','Alumnus','History','Atlas Park','','','','');
-INSERT INTO `badges` VALUES ('False','Arachnos Rising','Arachnos Rising','History','Sharkhead Isle','','','','');
-INSERT INTO `badges` VALUES ('False','Authority','Authority','History','Talos Island','','','','');
-INSERT INTO `badges` VALUES ('False','Digger','Digger','History','Atlas Park','','','','');
-INSERT INTO `badges` VALUES ('False','Disciple','Disciple','History','Steel Canyon','','','','');
-INSERT INTO `badges` VALUES ('False','Expert','Expert','History','Atlas Park','','','','');
-INSERT INTO `badges` VALUES ('False','Ghost Hunter','Ghost Hunter','History','Talos Island','','','','');
-INSERT INTO `badges` VALUES ('False','Headjuiced','Headjuiced','History','Nova Praetoria','','','','');
-INSERT INTO `badges` VALUES ('False','Historian','Historian','History','Talos Island','','','','');
-INSERT INTO `badges` VALUES ('False','Intellectual','Intellectual','History','Atlas Park','','','','');
-INSERT INTO `badges` VALUES ('False','Just Said No to Superadine','Just Said No to Superadine','History','Steel Canyon','','','','');
-INSERT INTO `badges` VALUES ('False','Lorekeeper','Lorekeeper','History','Mercy Island','','','','');
+INSERT INTO `badges` VALUES ('False','Academic','Academic','History','Peregrine Island','Peregrine Island,
+Rikti War Zone,
+Abandoned Sewer Network','','','');
+INSERT INTO `badges` VALUES ('False','Alumnus','Alumnus','History','Atlas Park','Atlas Park,
+Croatoa','','','');
+INSERT INTO `badges` VALUES ('False','Arachnos Rising','Arachnos Rising','History','Sharkhead Isle','Sharkhead Isle,
+St. Martial,
+Warburg,
+Grandville','','','');
+INSERT INTO `badges` VALUES ('False','Authority','Authority','History','Talos Island','Talos Island,
+Independence Port,
+Echo: Dark Astoria,
+Terra Volta','','','');
+INSERT INTO `badges` VALUES ('False','Digger','Digger','History','Atlas Park','Atlas Park,
+The Hollows','','','');
+INSERT INTO `badges` VALUES ('False','Disciple','Disciple','History','Steel Canyon','Steel Canyon,
+Skyway City,
+Boomtown,
+Faultline','','','');
+INSERT INTO `badges` VALUES ('False','Expert','Expert','History','Atlas Park','Atlas Park,
+Echo: Galaxy City,
+Perez Park','','','');
+INSERT INTO `badges` VALUES ('False','Ghost Hunter','Ghost Hunter','History','Talos Island','Talos Island,
+Striga Isle','','','');
+INSERT INTO `badges` VALUES ('False','Headjuiced','Headjuiced','History','Nova Praetoria','Nova Praetoria,
+Imperial City,
+Neutropolis,
+Underground Nova,
+Underground Imperial,
+Underground Neutropolis','','','');
+INSERT INTO `badges` VALUES ('False','Historian','Historian','History','Talos Island','Talos Island,
+Independence Port,
+Echo: Dark Astoria,
+Terra Volta','','','');
+INSERT INTO `badges` VALUES ('False','Intellectual','Intellectual','History','Atlas Park','Atlas Park,
+Echo: Galaxy City,
+Kings Row,
+Perez Park','','','');
+INSERT INTO `badges` VALUES ('False','Just Said No to Superadine','Just Said No to Superadine','History','Steel Canyon','Steel Canyon,
+Skyway City,
+Boomtown,
+Faultline','','','');
+INSERT INTO `badges` VALUES ('False','Lorekeeper','Lorekeeper','History','Mercy Island','Mercy Island,
+Port Oakes,
+Cap au Diable,
+Sharkhead Isle','','','');
 INSERT INTO `badges` VALUES ('False','Midnighter Archivist','Midnighter Archivist','History','Midnighter Club','Forbidden Relics','','','');
-INSERT INTO `badges` VALUES ('False','Park Stroller','Park Stroller','History','Brickstown','','','','');
-INSERT INTO `badges` VALUES ('False','Pupil','Pupil','History','Atlas Park','','','','');
-INSERT INTO `badges` VALUES ('False','Researcher','Researcher','History','Talos Island','','','','');
-INSERT INTO `badges` VALUES ('False','Savant','Savant','History','Founders'' Falls','','','','');
-INSERT INTO `badges` VALUES ('False','Scholar','Scholar','History','Steel Canyon','','','','');
-INSERT INTO `badges` VALUES ('False','Scholastic','Scholastic','History','Founders'' Falls','','','','');
-INSERT INTO `badges` VALUES ('False','Starstruck','Starstruck','History','Nova Praetoria','','','','');
-INSERT INTO `badges` VALUES ('False','Student','Student','History','Atlas Park','','','','');
-INSERT INTO `badges` VALUES ('False','Swashbuckler','Swashbuckler','History','Port Oakes','','','','');
-INSERT INTO `badges` VALUES ('False','Technofreak','Technofreak','History','Cap au Diable','','','','');
-INSERT INTO `badges` VALUES ('False','The Last Word','The Last Word','History','First Ward','','','','');
+INSERT INTO `badges` VALUES ('False','Park Stroller','Park Stroller','History','Brickstown','Brickstown','','','');
+INSERT INTO `badges` VALUES ('False','Pupil','Pupil','History','Atlas Park','Atlas Park,
+Echo: Galaxy City,
+Kings Row,
+Perez Park','','','');
+INSERT INTO `badges` VALUES ('False','Researcher','Researcher','History','Talos Island','Talos Island,
+Independence Port,
+Echo: Dark Astoria,
+Terra Volta','','','');
+INSERT INTO `badges` VALUES ('False','Savant','Savant','History','Founders'' Falls','Founders'' Falls,
+Crey’s Folly,
+Eden','','','');
+INSERT INTO `badges` VALUES ('False','Scholar','Scholar','History','Steel Canyon','Steel Canyon,
+Skyway City,
+Boomtown,
+Faultline','','','');
+INSERT INTO `badges` VALUES ('False','Scholastic','Scholastic','History','Founders'' Falls','Founders'' Falls,
+Brickstown','','','');
+INSERT INTO `badges` VALUES ('False','Starstruck','Starstruck','History','Nova Praetoria','Nova Praetoria','','','');
+INSERT INTO `badges` VALUES ('False','Student','Student','History','Atlas Park','Atlas Park,
+Echo: Galaxy City,
+Perez Park','','','');
+INSERT INTO `badges` VALUES ('False','Swashbuckler','Swashbuckler','History','Port Oakes','Port Oakes,
+Bloody Bay,
+Siren''s Call,
+Nerva Archipelago','','','');
+INSERT INTO `badges` VALUES ('False','Technofreak','Technofreak','History','Cap au Diable','Cap au Diable','','','');
+INSERT INTO `badges` VALUES ('False','The Last Word','The Last Word','History','First Ward','First Ward','','','');
 INSERT INTO `badges` VALUES ('False','Inventor','Inventor','Invention','Complete the Invention system tutorial','','','','');
 INSERT INTO `badges` VALUES ('False','Artisan','Artisan','Invention','Craft 50 times','','','','');
 INSERT INTO `badges` VALUES ('False','Master Artisan','Master Artisan','Invention','Craft 100 times','','','','');
@@ -1678,7 +1725,7 @@ INSERT INTO `badges` VALUES ('False','Unimaginative','Unimaginative','Ouroboros'
 INSERT INTO `badges` VALUES ('False','Flat','Flat','Ouroboros','Complete a level 20-24 Flashback arc using no inspirations','','','','');
 INSERT INTO `badges` VALUES ('False','Unoriginal','Unoriginal','Ouroboros','Complete a level 25-29 Flashback arc using no inspirations','','','','');
 INSERT INTO `badges` VALUES ('False','Dull','Dull','Ouroboros','Complete a level 30-34 Flashback arc using no inspirations','','','','');
-INSERT INTO `badges` VALUES ('False','Phoned It In','Phoned It In','Ouroboros','Complete a level 35-39 Flashback arc using no inspirations','','','','');
+INSERT INTO `badges` VALUES ('False','Phoned it in','Phoned it in','Ouroboros','Complete a level 35-39 Flashback arc using no inspirations','','','','');
 INSERT INTO `badges` VALUES ('False','Indifferent','Indifferent','Ouroboros','Complete a level 40-46 Flashback arc using no inspirations','','','','');
 INSERT INTO `badges` VALUES ('False','Uninspired','Uninspired','Ouroboros','Complete a level 46-50 Flashback arc using no inspirations','','','','');
 INSERT INTO `badges` VALUES ('False','Lessened','Lessened','Ouroboros','Complete a level 1-15 Flashback arc using no enhancements','','','','');

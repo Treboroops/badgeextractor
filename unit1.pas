@@ -15,11 +15,13 @@ type
   TForm1 = class(TForm)
     Button1: TButton;
     Button2: TButton;
+    ComboBox1: TComboBox;
     IniPropStorage1: TIniPropStorage;
     Memo1: TMemo;
     OpenDialog1: TOpenDialog;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -27,6 +29,7 @@ type
     BadgeList: TStringList;
     badgefile: TStringList;
     procedure ReportBadges(const badgetype: string);
+    procedure ReportExpBadges;
   public
     function RemoveSpecialChars(const str: string): string;
     function GetDisplayForBadge(const str: string): string;
@@ -55,6 +58,7 @@ var
   I: integer;
   logfile: TStringList;
 begin
+  Memo1.Clear;
   Data1.OpenDatabase;
 
   if OpenDialog1.Execute then
@@ -112,123 +116,78 @@ end;
 
 procedure TForm1.Button2Click(Sender: TObject);
 var
-  templist: TStringList;
-  expbadges: TStringList; // exploration badges
   badgename: string;
   I: integer;
-  badgeindex: integer;
 begin
   Data1.OpenDatabase;
   Memo1.Clear;
-  badgefile := TStringList.Create;
-  templist := TStringList.Create;
-  expbadges := TStringList.Create;
-  try
-    if OpenDialog1.Execute then
+
+  if OpenDialog1.Execute then
+  begin
+    // read through the file
+    badgefile.LoadFromFile(OpenDialog1.FileName);
+    badgefile.Sorted := True;
+
+    // check for badges which do not exist
+    For I := 0 to badgefile.Count - 1 do
     begin
-      // read through the file
-      badgefile.LoadFromFile(OpenDialog1.FileName);
-      badgefile.Sorted := True;
+      badgename := badgefile.Strings[I];
 
-      // check for badges which do not exist
-      For I := 0 to badgefile.Count - 1 do
+      //badgename is the displayname, check the DB
+      With Data1 do
       begin
-        badgename := badgefile.Strings[I];
+        SQLQuery1.SQL.Text := 'select Type from badges where DisplayName = ' +
+          QuotedStr(badgename);
+        SQLQuery1.Open;
+        IF SQLQuery1.RecordCount = 0 then
+          Memo1.Lines.Add('ERROR: Badge ' + badgename + ' is not in database');
 
-        //badgename is the displayname, check the DB and get the type of the badge
-        With Data1 do
-        begin
-          SQLQuery1.SQL.Text := 'select Type,Description,Notes from badges where DisplayName = ' +
-            QuotedStr(badgename);
-          SQLQuery1.Open;
-          IF SQLQuery1.RecordCount = 0 then
-            Memo1.Lines.Add('ERROR: Badge ' + badgename + ' is not in database');
-
-          SQLQuery1.Close;
-        end;
-
+        SQLQuery1.Close;
       end;
-
-      Memo1.Lines.add('Badges Needed');
-      Memo1.Lines.add('=============');
-      Memo1.Lines.add('');
-      // Do exploration badges first
-      Memo1.Lines.add('------------------');
-      Memo1.Lines.add('Exploration Badges');
-      Memo1.Lines.add('------------------');
-      with Data1 do
-      begin
-        Zones.Active := True; // here is our list of badge zones
-        Zones.First;
-        While not Zones.EOF do
-        begin
-          SQLQuery1.Active := False;
-          SQLQuery1.SQL.text := 'select distinct DisplayName,Description,Notes,X,Y,Z from '
-            + 'badges where Type = ''Exploration'' and Description =' +
-            QuotedStr(Zones.FieldByName('Description').asString);
-          SQLQuery1.Open;
-          // now we have a list of exploration badges for this zone
-          // see if each badge is in our list
-          templist.Clear;
-          SQLQuery1.First;
-          While not SQLQuery1.EOF do
-          begin
-            if badgefile.Find(SQLQuery1.FieldByName('DisplayName').asString, badgeindex) then
-            begin
-              // character has this badge
-              //Memo1.Lines.add(' *' + SQLQuery1.FieldByName('DisplayName').asString);
-            end
-            else
-            begin
-              // this badge has not been gained yet
-              templist.add('  ' + SQLQuery1.FieldByName('DisplayName').asString + #9#9 +
-                SQLQuery1.FieldByName('Notes').asString);
-            end;
-
-            SQLQuery1.Next;
-          end;
-          // if we have badges then list them
-          if templist.Count > 0 then
-          begin
-            Memo1.Lines.add('');
-            Memo1.Lines.add(' ' + Zones.FieldByName('Description').asString);
-
-            Memo1.Lines.AddStrings(templist);
-            templist.Clear;
-          end;
-          SQLQuery1.Close;
-
-          Zones.Next;
-        end;
-      end;
-
-      // do each type in turn... some better way to display this should be done
-      Memo1.Lines.add('');
-      ReportBadges('Accolades');
-      ReportBadges('Achievement');
-      ReportBadges('Architect');
-      ReportBadges('Consignment');
-      ReportBadges('Day Job');
-      ReportBadges('Defeat');
-      ReportBadges('Event');
-      ReportBadges('Gladiator');
-      ReportBadges('History');
-      ReportBadges('Invention');
-      ReportBadges('Ouroboros');
-      ReportBadges('PVP');
 
     end;
 
-  finally
-    badgefile.Free;
-    templist.Free;
-    expbadges.Free;
+    Memo1.Lines.add('Badges Needed');
+    Memo1.Lines.add('=============');
+    Memo1.Lines.add('');
+    ReportExpBadges;
+
+    // do each type in turn... some better way to display this should be done
+    Memo1.Lines.add('');
+    ReportBadges('Accolades');
+    ReportBadges('Achievement');
+    ReportBadges('Architect');
+    ReportBadges('Consignment');
+    ReportBadges('Day Job');
+    ReportBadges('Defeat');
+    ReportBadges('Event');
+    ReportBadges('Gladiator');
+    ReportBadges('History');
+    ReportBadges('Invention');
+    ReportBadges('Ouroboros');
+    ReportBadges('PVP');
+
+  end;
+end;
+
+procedure TForm1.ComboBox1Change(Sender: TObject);
+begin
+  if Data1.DBConnection.Connected then
+  begin
+    Memo1.Clear;
+    if ComboBox1.ItemIndex = 6 then
+    begin
+      ReportExpBadges;
+    end
+    else
+      ReportBadges(ComboBox1.Items[ComboBox1.ItemIndex]);
   end;
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   BadgeList.Free;
+  badgefile.free;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -236,6 +195,7 @@ begin
   BadgeList := TStringList.create;
   BadgeList.Sorted := True;
   BadgeList.Duplicates := dupIgnore;
+  badgefile := TStringList.Create;
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
@@ -247,7 +207,6 @@ procedure TForm1.ReportBadges(const badgetype: string);
 var
   badgeindex: Integer;
 begin
-  Memo1.Lines.add('');
   Memo1.Lines.add('-----------');
   Memo1.Lines.add(badgetype);
   Memo1.Lines.add('-----------');
@@ -275,6 +234,70 @@ begin
     end;
 
     SQLQuery1.Close;
+  end;
+
+  Memo1.Lines.Add('');
+end;
+
+procedure TForm1.ReportExpBadges;
+var
+  templist: TStringList;
+  badgeindex: integer;
+begin
+  templist := TStringList.Create;
+  try
+    // Do exploration badges first
+    Memo1.Lines.add('------------------');
+    Memo1.Lines.add('Exploration Badges');
+    Memo1.Lines.add('------------------');
+    with Data1 do
+    begin
+      Zones.Active := True; // here is our list of badge zones
+      Zones.First;
+      While not Zones.EOF do
+      begin
+        SQLQuery1.Active := False;
+        SQLQuery1.SQL.text := 'select distinct DisplayName,Description,Notes,X,Y,Z from '
+          + 'badges where Type = ''Exploration'' and Description =' +
+          QuotedStr(Zones.FieldByName('Description').asString);
+        SQLQuery1.Open;
+        // now we have a list of exploration badges for this zone
+        // see if each badge is in our list
+        templist.Clear;
+        SQLQuery1.First;
+        While not SQLQuery1.EOF do
+        begin
+          if badgefile.Find(SQLQuery1.FieldByName('DisplayName').asString, badgeindex) then
+          begin
+            // character has this badge
+            //Memo1.Lines.add(' *' + SQLQuery1.FieldByName('DisplayName').asString);
+          end
+          else
+          begin
+            // this badge has not been gained yet
+            templist.add('  ' + SQLQuery1.FieldByName('DisplayName').asString + #9#9 +
+              SQLQuery1.FieldByName('Notes').asString);
+          end;
+
+          SQLQuery1.Next;
+        end;
+        // if we have badges then list them
+        if templist.Count > 0 then
+        begin
+          Memo1.Lines.add('');
+          Memo1.Lines.add(' ' + Zones.FieldByName('Description').asString);
+
+          Memo1.Lines.AddStrings(templist);
+          templist.Clear;
+        end;
+        SQLQuery1.Close;
+
+        Zones.Next;
+      end;
+    end;
+  finally
+    templist.clear;
+    templist.Free;
   end;
 end;
 
