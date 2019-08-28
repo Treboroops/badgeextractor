@@ -84,11 +84,4 @@ object Data1: TData1
     left = 56
     top = 248
   end
-  object SQLDBLibraryLoader1: TSQLDBLibraryLoader
-    Enabled = False
-    ConnectionType = 'SQLite3'
-    LibraryName = '/home/tim/src/badgeextractor/libsqlite3.so'
-    left = 224
-    top = 32
-  end
 end

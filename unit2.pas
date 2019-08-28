@@ -5,24 +5,25 @@ unit Unit2;
 interface
 
 uses
-  Classes, SysUtils, sqlite3conn, sqldb, sqldblib, db, FileUtil, Forms,
-  Controls, Graphics, Dialogs, DbCtrls, StdCtrls, DBGrids;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  IniPropStorage;
 
 type
 
-  { TForm2 }
+  { ToptionsForm }
 
-  TForm2 = class(TForm)
+  ToptionsForm = class(TForm)
     Button1: TButton;
-    DataSource1: TDataSource;
-    DBGrid1: TDBGrid;
-    DBNavigator1: TDBNavigator;
-    SQDB1: TSQLite3Connection;
-    SQLDBLibraryLoader1: TSQLDBLibraryLoader;
-    SQLQuery1: TSQLQuery;
-    SQLTransaction1: TSQLTransaction;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    edChatlogDir: TEdit;
+    edOutputDir: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    SelectDirectoryDialog1: TSelectDirectoryDialog;
     procedure Button1Click(Sender: TObject);
-    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
+    procedure Button2Click(Sender: TObject);
   private
 
   public
@@ -30,24 +31,24 @@ type
   end;
 
 var
-  Form2: TForm2;
+  optionsForm: ToptionsForm;
 
 implementation
 
 {$R *.lfm}
 
-{ TForm2 }
+{ ToptionsForm }
 
-procedure TForm2.Button1Click(Sender: TObject);
+procedure ToptionsForm.Button1Click(Sender: TObject);
 begin
-  SQLQuery1.SQL.Text := 'select * from badges where Achieved = "True"';
-  SQLQuery1.Active := True;
+  if SelectDirectoryDialog1.Execute then
+    edChatlogDir.Text := SelectDirectoryDialog1.FileName;
 end;
 
-procedure TForm2.FormCloseQuery(Sender: TObject; var CanClose: boolean);
+procedure ToptionsForm.Button2Click(Sender: TObject);
 begin
-  SQLQuery1.Close;
-  SQDB1.connected := False;
+  if SelectDirectoryDialog1.Execute then
+    edOutputDir.Text := SelectDirectoryDialog1.FileName;
 end;
 
 end.

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, IniPropStorage, StrUtils, dataunit;
+  ExtCtrls, IniPropStorage, StrUtils, dataunit, Unit2, LazFileUtils;
 
 type
 
@@ -15,12 +15,14 @@ type
   TForm1 = class(TForm)
     Button1: TButton;
     Button2: TButton;
+    Button3: TButton;
     ComboBox1: TComboBox;
     IniPropStorage1: TIniPropStorage;
     Memo1: TMemo;
     OpenDialog1: TOpenDialog;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
@@ -28,6 +30,8 @@ type
   private
     BadgeList: TStringList;
     badgefile: TStringList;
+    chatlogdir: string;
+    outputdir: string;
     procedure ReportBadges(const badgetype: string);
     procedure ReportExpBadges;
   public
@@ -53,17 +57,20 @@ const
 var
   tempstring: string;
   tempstr2: string;
-  username: string;
+  username, charactername: string;
   badge: string;
   I: integer;
   logfile: TStringList;
+  outputstrings: TStringList;
 begin
   Memo1.Clear;
   Data1.OpenDatabase;
 
+  OpenDialog1.InitialDir := chatlogdir;
   if OpenDialog1.Execute then
   begin
     logfile := TStringList.Create;
+    outputstrings := TStringList.Create;
     logfile.LoadFromFile(OpenDialog1.FileName);
 
     // look for badges
@@ -77,20 +84,20 @@ begin
         //now we check each string looking for specific messages
         if AnsiStartsStr(welcome, tempstring) then
           begin
-            Form1.Caption := Trim(Copy(tempstring, length(welcome)));
             BadgeList.SaveToFile(username);
             BadgeList.Clear;
-            Memo1.Append('Starting badges for ' + Form1.Caption);
-            username := RemoveSpecialChars(Form1.Caption) + '.txt';
+            charactername := Trim(Copy(tempstring, length(welcome)));
+            username := AppendPathDelim(outputdir) + RemoveSpecialChars(charactername) + '.txt';
+            OutputStrings.Append('Starting badges for ' + charactername);
             If fileexists(username) then BadgeList.LoadFromFile(username);
           end
          else if AnsiStartsStr(welcome2, tempstring) then
           begin
-            Form1.Caption := Trim(Copy(tempstring, length(welcome2)));
             BadgeList.SaveToFile(username);
             BadgeList.Clear;
-            Memo1.Append('Starting badges for ' + Form1.Caption);
-            username := RemoveSpecialChars(Form1.Caption) + '.txt';
+            charactername := Trim(Copy(tempstring, length(welcome2)));
+            username := AppendPathDelim(outputdir) + RemoveSpecialChars(charactername) + '.txt';
+            OutputStrings.Append('Starting badges for ' + charactername);
             If fileexists(username) then BadgeList.LoadFromFile(username);
           end;
 
@@ -99,18 +106,21 @@ begin
             tempstr2 := Copy(tempstring, length(badgeearned));
             badge := (Trim(copy(tempstr2, 1, length(tempstr2)-7)));
             BadgeList.Add(GetDisplayForBadge(badge));
-            Memo1.Append(Badge);
+            OutputStrings.Append(Badge);
           end
         else if AnsiEndsStr(badgetitle, tempstring) then
           begin
             badge := (Trim(Copy(tempstring, 1, length(tempstring) - length(badgeearned))));
             BadgeList.Add(GetDisplayForBadge(badge));
-            Memo1.Append(Badge);
+            OutputStrings.Append(Badge);
           end;
       end;
 
+    Memo1.Lines.Assign(OutputStrings);
     BadgeList.SaveToFile(username);
     logfile.Free;
+    OutputStrings.Clear;
+    OutputStrings.Free;
   end;
 end;
 
@@ -119,12 +129,14 @@ var
   badgename: string;
   I: integer;
 begin
-  Data1.OpenDatabase;
-  Memo1.Clear;
-
+  OpenDialog1.InitialDir := outputdir;
   if OpenDialog1.Execute then
   begin
+    Data1.OpenDatabase;
+    Memo1.Clear;
+
     // read through the file
+    Form1.Caption:= ExtractFileNameOnly(OpenDialog1.FileName);
     badgefile.LoadFromFile(OpenDialog1.FileName);
     badgefile.Sorted := True;
 
@@ -170,6 +182,22 @@ begin
   end;
 end;
 
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+  optionsForm.edChatlogDir.Text := chatlogdir;
+  optionsForm.edOutputDir.Text := outputdir;
+  if (optionsForm.ShowModal = mrOk) then
+  begin
+    chatlogdir := optionsForm.edChatlogDir.Text;
+    if not DirectoryExists(chatlogdir) then chatlogdir := getcurrentdir;
+    IniPropStorage1.StoredValues.Values['ChatLogDirectory'].Value := chatlogdir;
+
+    outputdir := optionsForm.edOutputDir.Text;
+    if not DirectoryExists(outputdir) then outputdir := getcurrentdir;
+    IniPropStorage1.StoredValues.Values['OutputDirectory'].Value := outputdir;
+  end;
+end;
+
 procedure TForm1.ComboBox1Change(Sender: TObject);
 begin
   if Data1.DBConnection.Connected then
@@ -186,6 +214,7 @@ end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  IniPropStorage1.Save;
   BadgeList.Free;
   badgefile.free;
 end;
@@ -200,16 +229,21 @@ end;
 
 procedure TForm1.FormShow(Sender: TObject);
 begin
-
+  IniPropStorage1.Restore;
+  chatlogdir := IniPropStorage1.StoredValues.Values['ChatLogDirectory'].Value;
+  outputdir := IniPropStorage1.StoredValues.Values['OutputDirectory'].Value;
 end;
 
 procedure TForm1.ReportBadges(const badgetype: string);
 var
   badgeindex: Integer;
+  tmpstringlist: TStringList;
 begin
-  Memo1.Lines.add('-----------');
-  Memo1.Lines.add(badgetype);
-  Memo1.Lines.add('-----------');
+  tmpstringlist := TStringList.Create;
+
+  tmpstringlist.add('-----------');
+  tmpstringlist.add(badgetype);
+  tmpstringlist.add('-----------');
 
   With Data1 do
   begin
@@ -227,8 +261,8 @@ begin
       else
       begin
         // this badge has not been gained yet
-        Memo1.Lines.add('  ' + SQLQuery1.FieldByName('DisplayName').asString);
-        Memo1.Lines.add('     (' + SQLQuery1.FieldByName('Description').asString + ')');
+        tmpstringlist.add('  ' + SQLQuery1.FieldByName('DisplayName').asString);
+        tmpstringlist.add('     (' + SQLQuery1.FieldByName('Description').asString + ')');
       end;
       SQLQuery1.Next;
     end;
@@ -236,7 +270,9 @@ begin
     SQLQuery1.Close;
   end;
 
-  Memo1.Lines.Add('');
+  tmpstringlist.Add('');
+  Memo1.Lines.AddStrings(tmpstringlist);
+  tmpstringlist.free;
 end;
 
 procedure TForm1.ReportExpBadges;

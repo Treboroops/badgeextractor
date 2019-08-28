@@ -5,7 +5,7 @@ unit dataunit;
 interface
 
 uses
-  Classes, SysUtils, sqlite3conn, sqldblib, sqldb, FileUtil;
+  Classes, SysUtils, sqlite3conn, sqldblib, sqldb, FileUtil, sqlite3dyn;
 
 type
 
@@ -13,7 +13,6 @@ type
 
   TData1 = class(TDataModule)
     DBConnection: TSQLite3Connection;
-    SQLDBLibraryLoader1: TSQLDBLibraryLoader;
     SQLQuery1: TSQLQuery;
     SQLTransaction1: TSQLTransaction;
     Zones: TSQLQuery;
@@ -36,8 +35,9 @@ implementation
 
 procedure TData1.DataModuleCreate(Sender: TObject);
 begin
-  SQLiteLibraryName := './libsqlite3.so';
-
+  {IFDEF LINUX}
+  sqlite3dyn.sqlitedefaultlibrary := './libsqlite3.so';
+  {ENDIF}
 end;
 
 procedure TData1.DataModuleDestroy(Sender: TObject);
