@@ -19,7 +19,8 @@ type
     ComboBox1: TComboBox;
     IniPropStorage1: TIniPropStorage;
     Memo1: TMemo;
-    OpenDialog1: TOpenDialog;
+    OpenChatDialog: TOpenDialog;
+    OpenReportDialog: TOpenDialog;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -66,12 +67,12 @@ begin
   Memo1.Clear;
   Data1.OpenDatabase;
 
-  OpenDialog1.InitialDir := chatlogdir;
-  if OpenDialog1.Execute then
+  OpenChatDialog.InitialDir := chatlogdir;
+  if OpenChatDialog.Execute then
   begin
     logfile := TStringList.Create;
     outputstrings := TStringList.Create;
-    logfile.LoadFromFile(OpenDialog1.FileName);
+    logfile.LoadFromFile(OpenChatDialog.FileName);
 
     // look for badges
     username := 'default.txt';
@@ -127,17 +128,25 @@ end;
 procedure TForm1.Button2Click(Sender: TObject);
 var
   badgename: string;
-  I: integer;
+  badgetype: string;
+  I, J: integer;
+  badgebytype: array[1..15] of integer;
 begin
-  OpenDialog1.InitialDir := outputdir;
-  if OpenDialog1.Execute then
+  J := 0;
+  For I := 1 to 15 do
+    badgebytype[I] := 0;
+
+  OpenReportDialog.InitialDir := outputdir;
+  if OpenReportDialog.Execute then
   begin
     Data1.OpenDatabase;
     Memo1.Clear;
+    ComboBox1.ItemIndex := 0;
 
     // read through the file
-    Form1.Caption:= ExtractFileNameOnly(OpenDialog1.FileName);
-    badgefile.LoadFromFile(OpenDialog1.FileName);
+    Form1.Caption:= ExtractFileNameOnly(OpenReportDialog.FileName);
+    badgefile.Clear;
+    badgefile.LoadFromFile(OpenReportDialog.FileName);
     badgefile.Sorted := True;
 
     // check for badges which do not exist
@@ -152,33 +161,49 @@ begin
           QuotedStr(badgename);
         SQLQuery1.Open;
         IF SQLQuery1.RecordCount = 0 then
-          Memo1.Lines.Add('ERROR: Badge ' + badgename + ' is not in database');
+          Memo1.Lines.Add('ERROR: Badge ' + badgename + ' is not in database')
+        else
+          begin
+            J := J +1; // increase total badges
+            badgetype := SQLQuery1.FieldByName('Type').asString;
+            case badgetype of
+              'Accolade': badgebytype[1] := badgebytype[1] + 1;
+              'Accomplishment': badgebytype[2] := badgebytype[2] + 1;
+              'Achievement': badgebytype[3] := badgebytype[3] + 1;
+              'Architect': badgebytype[4] := badgebytype[4] + 1;
+              'Consignment': badgebytype[5] := badgebytype[5] + 1;
+              'Day Job': badgebytype[6] := badgebytype[6] + 1;
+              'Defeat': badgebytype[7] := badgebytype[7] + 1;
+              'Event': badgebytype[8] := badgebytype[8] + 1;
+              'Exploration': badgebytype[9] := badgebytype[9] + 1;
+              'Gladiator':  badgebytype[10] := badgebytype[10] + 1;
+              'History':  badgebytype[11] := badgebytype[11] + 1;
+              'Invention' : badgebytype[12] := badgebytype[12] + 1;
+              'Ouroboros':  badgebytype[13] := badgebytype[13] + 1;
+              'PVP':  badgebytype[14] := badgebytype[14] + 1;
+              'Veteran':  badgebytype[15] := badgebytype[15] + 1;
+            end;
+          end;
 
         SQLQuery1.Close;
       end;
 
     end;
-
-    Memo1.Lines.add('Badges Needed');
-    Memo1.Lines.add('=============');
-    Memo1.Lines.add('');
-    ReportExpBadges;
-
-    // do each type in turn... some better way to display this should be done
-    Memo1.Lines.add('');
-    ReportBadges('Accolades');
-    ReportBadges('Achievement');
-    ReportBadges('Architect');
-    ReportBadges('Consignment');
-    ReportBadges('Day Job');
-    ReportBadges('Defeat');
-    ReportBadges('Event');
-    ReportBadges('Gladiator');
-    ReportBadges('History');
-    ReportBadges('Invention');
-    ReportBadges('Ouroboros');
-    ReportBadges('PVP');
-
+    Memo1.Lines.Add('Loaded ' + inttostr(J) + ' badges for ' + Form1.Caption);
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[9]) + ' Exploration badges');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[1]) + ' Accolades ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[2]) + ' Accomplishments ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[3]) + ' Achievements ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[4]) + ' Architect badges ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[5]) + ' Consignment badges ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[6]) + ' Day Jobs ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[7]) + ' Defeat badges ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[8]) + ' Event badges ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[10]) + ' Gladiators ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[11]) + ' History badges ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[12]) + ' Invention badges ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[13]) + ' Ouroboros badges ');
+    Memo1.Lines.Add(' ' + inttostr(badgebytype[14]) + ' PVP ');
   end;
 end;
 
@@ -203,7 +228,10 @@ begin
   if Data1.DBConnection.Connected then
   begin
     Memo1.Clear;
-    if ComboBox1.ItemIndex = 6 then
+    if ComboBox1.ItemIndex < 1 then
+      Memo1.Lines.Add(Form1.Caption)
+    else
+    if ComboBox1.ItemIndex = 8 then
     begin
       ReportExpBadges;
     end

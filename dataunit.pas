@@ -35,9 +35,9 @@ implementation
 
 procedure TData1.DataModuleCreate(Sender: TObject);
 begin
-  {IFDEF LINUX}
+  {$IFDEF LINUX}
   sqlite3dyn.sqlitedefaultlibrary := './libsqlite3.so';
-  {ENDIF}
+  {$ENDIF}
 end;
 
 procedure TData1.DataModuleDestroy(Sender: TObject);

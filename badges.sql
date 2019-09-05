@@ -1545,76 +1545,76 @@ INSERT INTO `badges` VALUES ('False','Wailer','Wailer','Gladiator','Wailers','Ea
 INSERT INTO `badges` VALUES ('False','Wailer Queen','Wailer Queen','Gladiator','Wailers','Earn the Dazed and Confused Badge','','','');
 INSERT INTO `badges` VALUES ('False','Smasher Elite','Smasher Elite','Gladiator','Warriors','Earn the Legionnaire Badge','','','');
 INSERT INTO `badges` VALUES ('False','Snowbeast','Snowbeast','Gladiator','Winter Horde','Earn the Toy Collector Badge','','','');
-INSERT INTO `badges` VALUES ('False','Academic','Academic','History','Peregrine Island','Peregrine Island,
+INSERT INTO `badges` VALUES ('False','Academic','Academic','History','Peregrine Island, Rikti War Zone, Abandoned Sewer Network','Peregrine Island,
 Rikti War Zone,
 Abandoned Sewer Network','','','');
-INSERT INTO `badges` VALUES ('False','Alumnus','Alumnus','History','Atlas Park','Atlas Park,
+INSERT INTO `badges` VALUES ('False','Alumnus','Alumnus','History','Atlas Park, Croatoa','Atlas Park,
 Croatoa','','','');
-INSERT INTO `badges` VALUES ('False','Arachnos Rising','Arachnos Rising','History','Sharkhead Isle','Sharkhead Isle,
+INSERT INTO `badges` VALUES ('False','Arachnos Rising','Arachnos Rising','History','Sharkhead Isle, St. Martial, Warburg, Grandville','Sharkhead Isle,
 St. Martial,
 Warburg,
 Grandville','','','');
-INSERT INTO `badges` VALUES ('False','Authority','Authority','History','Talos Island','Talos Island,
+INSERT INTO `badges` VALUES ('False','Authority','Authority','History','Talos Island, Independence Port, Echo: Dark Astoria, Terra Volta','Talos Island,
 Independence Port,
 Echo: Dark Astoria,
 Terra Volta','','','');
-INSERT INTO `badges` VALUES ('False','Digger','Digger','History','Atlas Park','Atlas Park,
+INSERT INTO `badges` VALUES ('False','Digger','Digger','History','Atlas Park, The Hollows','Atlas Park,
 The Hollows','','','');
-INSERT INTO `badges` VALUES ('False','Disciple','Disciple','History','Steel Canyon','Steel Canyon,
+INSERT INTO `badges` VALUES ('False','Disciple','Disciple','History','Steel Canyon, Skyway City, Boomtown, Faultline','Steel Canyon,
 Skyway City,
 Boomtown,
 Faultline','','','');
-INSERT INTO `badges` VALUES ('False','Expert','Expert','History','Atlas Park','Atlas Park,
+INSERT INTO `badges` VALUES ('False','Expert','Expert','History','Atlas Park, Echo: Galaxy City, Perez Park','Atlas Park,
 Echo: Galaxy City,
 Perez Park','','','');
-INSERT INTO `badges` VALUES ('False','Ghost Hunter','Ghost Hunter','History','Talos Island','Talos Island,
+INSERT INTO `badges` VALUES ('False','Ghost Hunter','Ghost Hunter','History','Talos Island, Striga Isle','Talos Island,
 Striga Isle','','','');
-INSERT INTO `badges` VALUES ('False','Headjuiced','Headjuiced','History','Nova Praetoria','Nova Praetoria,
+INSERT INTO `badges` VALUES ('False','Headjuiced','Headjuiced','History','Nova Praetoria, Imperial City, Neutropolis, Underground Nova, Underground Imperial, Underground Neutropolis','Nova Praetoria,
 Imperial City,
 Neutropolis,
 Underground Nova,
 Underground Imperial,
 Underground Neutropolis','','','');
-INSERT INTO `badges` VALUES ('False','Historian','Historian','History','Talos Island','Talos Island,
+INSERT INTO `badges` VALUES ('False','Historian','Historian','History','Talos Island, Independence Port, Echo: Dark Astoria, Terra Volta','Talos Island,
 Independence Port,
 Echo: Dark Astoria,
 Terra Volta','','','');
-INSERT INTO `badges` VALUES ('False','Intellectual','Intellectual','History','Atlas Park','Atlas Park,
+INSERT INTO `badges` VALUES ('False','Intellectual','Intellectual','History','Atlas Park, Echo: Galaxy City, Kings Row, Perez Park','Atlas Park,
 Echo: Galaxy City,
 Kings Row,
 Perez Park','','','');
-INSERT INTO `badges` VALUES ('False','Just Said No to Superadine','Just Said No to Superadine','History','Steel Canyon','Steel Canyon,
+INSERT INTO `badges` VALUES ('False','Just Said No to Superadine','Just Said No to Superadine','History','Steel Canyon, Skyway City, Boomtown, Faultline','Steel Canyon,
 Skyway City,
 Boomtown,
 Faultline','','','');
-INSERT INTO `badges` VALUES ('False','Lorekeeper','Lorekeeper','History','Mercy Island','Mercy Island,
+INSERT INTO `badges` VALUES ('False','Lorekeeper','Lorekeeper','History','Mercy Island, Port Oakes, Cap au Diable, Sharkhead Isle','Mercy Island,
 Port Oakes,
 Cap au Diable,
 Sharkhead Isle','','','');
 INSERT INTO `badges` VALUES ('False','Midnighter Archivist','Midnighter Archivist','History','Midnighter Club','Forbidden Relics','','','');
 INSERT INTO `badges` VALUES ('False','Park Stroller','Park Stroller','History','Brickstown','Brickstown','','','');
-INSERT INTO `badges` VALUES ('False','Pupil','Pupil','History','Atlas Park','Atlas Park,
+INSERT INTO `badges` VALUES ('False','Pupil','Pupil','History','Atlas Park, Echo: Galaxy City, Kings Row, Perez Park','Atlas Park,
 Echo: Galaxy City,
 Kings Row,
 Perez Park','','','');
-INSERT INTO `badges` VALUES ('False','Researcher','Researcher','History','Talos Island','Talos Island,
+INSERT INTO `badges` VALUES ('False','Researcher','Researcher','History','Talos Island, Independence Port, Echo: Dark Astoria, Terra Volta','Talos Island,
 Independence Port,
 Echo: Dark Astoria,
 Terra Volta','','','');
-INSERT INTO `badges` VALUES ('False','Savant','Savant','History','Founders'' Falls','Founders'' Falls,
+INSERT INTO `badges` VALUES ('False','Savant','Savant','History','Founders'' Falls, Crey’s Folly, Eden','Founders'' Falls,
 Crey’s Folly,
 Eden','','','');
-INSERT INTO `badges` VALUES ('False','Scholar','Scholar','History','Steel Canyon','Steel Canyon,
+INSERT INTO `badges` VALUES ('False','Scholar','Scholar','History','Steel Canyon, Skyway City, Boomtown, Faultline','Steel Canyon,
 Skyway City,
 Boomtown,
 Faultline','','','');
-INSERT INTO `badges` VALUES ('False','Scholastic','Scholastic','History','Founders'' Falls','Founders'' Falls,
+INSERT INTO `badges` VALUES ('False','Scholastic','Scholastic','History','Founders'' Falls, Brickstown','Founders'' Falls,
 Brickstown','','','');
 INSERT INTO `badges` VALUES ('False','Starstruck','Starstruck','History','Nova Praetoria','Nova Praetoria','','','');
-INSERT INTO `badges` VALUES ('False','Student','Student','History','Atlas Park','Atlas Park,
+INSERT INTO `badges` VALUES ('False','Student','Student','History','Atlas Park, Echo: Galaxy City, Perez Park','Atlas Park,
 Echo: Galaxy City,
 Perez Park','','','');
-INSERT INTO `badges` VALUES ('False','Swashbuckler','Swashbuckler','History','Port Oakes','Port Oakes,
+INSERT INTO `badges` VALUES ('False','Swashbuckler','Swashbuckler','History','Port Oakes, Bloody Bay, Siren''s Call, Nerva Archipelago','Port Oakes,
 Bloody Bay,
 Siren''s Call,
 Nerva Archipelago','','','');

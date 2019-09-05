@@ -13,3 +13,8 @@ Press 'Parse Chat' and select a log file to be read.
 Any badges gained or errors found will be written to the main text window.
 The program will export a text file for each character that contains entries in the chat logs and export a list of badges gained to it.
 The Report button can be used to read in a list of badges and list any badges still needed. Use the drop down list to show badges needed for specific types.
+
+Issues
+If you start logging for a character after that character has logged into the game it will look as though any badges gained belonged to the previous character.
+To correct this after enabling logging immediately log out then back in again.
+Idealy make the default to enable chatlogs for all characters.
