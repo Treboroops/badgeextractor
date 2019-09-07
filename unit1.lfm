@@ -47,6 +47,7 @@ object Form1: TForm1
     Height = 29
     Top = 8
     Width = 180
+    Enabled = False
     ItemHeight = 0
     ItemIndex = 0
     Items.Strings = (

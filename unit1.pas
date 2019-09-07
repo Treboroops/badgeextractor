@@ -33,8 +33,11 @@ type
     badgefile: TStringList;
     chatlogdir: string;
     outputdir: string;
+    badgebytype: array[1..15] of integer;
+    totalbadges: integer;
     procedure ReportBadges(const badgetype: string);
     procedure ReportExpBadges;
+    procedure ReportTotals;
   public
     function RemoveSpecialChars(const str: string): string;
     function GetDisplayForBadge(const str: string): string;
@@ -129,10 +132,9 @@ procedure TForm1.Button2Click(Sender: TObject);
 var
   badgename: string;
   badgetype: string;
-  I, J: integer;
-  badgebytype: array[1..15] of integer;
+  I: integer;
 begin
-  J := 0;
+  totalbadges := 0;
   For I := 1 to 15 do
     badgebytype[I] := 0;
 
@@ -164,7 +166,7 @@ begin
           Memo1.Lines.Add('ERROR: Badge ' + badgename + ' is not in database')
         else
           begin
-            J := J +1; // increase total badges
+            totalbadges := totalbadges + 1;
             badgetype := SQLQuery1.FieldByName('Type').asString;
             case badgetype of
               'Accolade': badgebytype[1] := badgebytype[1] + 1;
@@ -189,21 +191,9 @@ begin
       end;
 
     end;
-    Memo1.Lines.Add('Loaded ' + inttostr(J) + ' badges for ' + Form1.Caption);
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[9]) + ' Exploration badges');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[1]) + ' Accolades ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[2]) + ' Accomplishments ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[3]) + ' Achievements ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[4]) + ' Architect badges ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[5]) + ' Consignment badges ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[6]) + ' Day Jobs ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[7]) + ' Defeat badges ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[8]) + ' Event badges ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[10]) + ' Gladiators ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[11]) + ' History badges ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[12]) + ' Invention badges ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[13]) + ' Ouroboros badges ');
-    Memo1.Lines.Add(' ' + inttostr(badgebytype[14]) + ' PVP ');
+
+    ReportTotals;
+    ComboBox1.Enabled := True;
   end;
 end;
 
@@ -229,7 +219,9 @@ begin
   begin
     Memo1.Clear;
     if ComboBox1.ItemIndex < 1 then
-      Memo1.Lines.Add(Form1.Caption)
+    begin
+      ReportTotals;
+    end
     else
     if ComboBox1.ItemIndex = 8 then
     begin
@@ -363,6 +355,25 @@ begin
     templist.clear;
     templist.Free;
   end;
+end;
+
+procedure TForm1.ReportTotals;
+begin
+  Memo1.Lines.Add('Loaded ' + inttostr(totalbadges) + ' badges for ' + Form1.Caption);
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[9]) + ' Exploration badges');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[1]) + ' Accolades ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[2]) + ' Accomplishments ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[3]) + ' Achievements ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[4]) + ' Architect badges ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[5]) + ' Consignment badges ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[6]) + ' Day Jobs ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[7]) + ' Defeat badges ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[8]) + ' Event badges ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[10]) + ' Gladiators ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[11]) + ' History badges ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[12]) + ' Invention badges ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[13]) + ' Ouroboros badges ');
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[14]) + ' PVP ');
 end;
 
 function TForm1.RemoveSpecialChars(const str: string): string;
