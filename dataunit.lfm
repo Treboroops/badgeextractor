@@ -2,19 +2,19 @@ object Data1: TData1
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   OldCreateOrder = False
-  Height = 629
-  HorizontalOffset = 1225
-  VerticalOffset = 401
-  Width = 645
-  PPI = 120
+  Height = 503
+  HorizontalOffset = 1124
+  VerticalOffset = 343
+  Width = 516
+  PPI = 96
   object DBConnection: TSQLite3Connection
     Connected = False
     LoginPrompt = False
     DatabaseName = './default.sqlite'
     KeepConnection = False
     Transaction = SQLTransaction1
-    left = 70
-    top = 40
+    left = 56
+    top = 32
   end
   object Zones: TSQLQuery
     FieldDefs = <    
@@ -29,14 +29,14 @@ object Data1: TData1
       'select distinct Description from badges where Type = ''Exploration'''
     )
     Params = <>
-    left = 70
-    top = 190
+    left = 56
+    top = 152
   end
   object SQLTransaction1: TSQLTransaction
     Active = False
     Database = DBConnection
-    left = 280
-    top = 140
+    left = 224
+    top = 112
   end
   object SQLQuery1: TSQLQuery
     FieldDefs = <    
@@ -81,7 +81,7 @@ object Data1: TData1
       'select DisplayName from badges'
     )
     Params = <>
-    left = 70
-    top = 310
+    left = 56
+    top = 248
   end
 end

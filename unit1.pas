@@ -67,19 +67,21 @@ var
   logfile: TStringList;
   outputstrings: TStringList;
 begin
-  Memo1.Clear;
-  Data1.OpenDatabase;
-
   OpenChatDialog.InitialDir := chatlogdir;
   if OpenChatDialog.Execute then
   begin
+    Memo1.Clear;
+    Data1.OpenDatabase;
+
     logfile := TStringList.Create;
     outputstrings := TStringList.Create;
     logfile.LoadFromFile(OpenChatDialog.FileName);
 
     // look for badges
-    username := 'default.txt';
-    If fileexists(username) then BadgeList.LoadFromFile(username);
+    BadgeList.Clear;
+    username := AppendPathDelim(outputdir) + 'default.txt';
+    If fileexists(username) then
+      BadgeList.LoadFromFile(username);
 
     For I := 0 to logfile.Count - 1 do
       begin
@@ -125,6 +127,8 @@ begin
     logfile.Free;
     OutputStrings.Clear;
     OutputStrings.Free;
+
+    Data1.CloseDatabase;
   end;
 end;
 

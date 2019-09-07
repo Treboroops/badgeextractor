@@ -22,6 +22,7 @@ type
 
   public
     procedure OpenDatabase;
+    procedure CloseDatabase;
   end;
 
 var
@@ -50,6 +51,13 @@ end;
 procedure TData1.OpenDatabase;
 begin
   DBConnection.Open;
+end;
+
+procedure TData1.CloseDatabase;
+begin
+  SQLQuery1.Active := False;
+  Zones.Active := False;
+  DBConnection.Close;
 end;
 
 end.
