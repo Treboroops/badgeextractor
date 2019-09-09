@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, IniPropStorage, StrUtils, dataunit, Unit2, LazFileUtils;
+  ExtCtrls, IniPropStorage, StrUtils, dataunit, Unit2, LazFileUtils, orphans;
 
 type
 
@@ -66,7 +66,12 @@ var
   I: integer;
   logfile: TStringList;
   outputstrings: TStringList;
+  orphan: boolean;
+  orphanedbadges: TStringList;
+  OrphanBadgeSelect: TOrphanBadgeSelector;
 begin
+  orphan := true;
+
   OpenChatDialog.InitialDir := chatlogdir;
   if OpenChatDialog.Execute then
   begin
@@ -75,13 +80,12 @@ begin
 
     logfile := TStringList.Create;
     outputstrings := TStringList.Create;
+    orphanedbadges := TStringList.Create;
+    orphanedbadges.Sorted := True;
     logfile.LoadFromFile(OpenChatDialog.FileName);
 
     // look for badges
     BadgeList.Clear;
-    username := AppendPathDelim(outputdir) + 'default.txt';
-    If fileexists(username) then
-      BadgeList.LoadFromFile(username);
 
     For I := 0 to logfile.Count - 1 do
       begin
@@ -90,41 +94,84 @@ begin
         //now we check each string looking for specific messages
         if AnsiStartsStr(welcome, tempstring) then
           begin
-            BadgeList.SaveToFile(username);
-            BadgeList.Clear;
+            if not orphan then
+              begin
+                BadgeList.SaveToFile(username);
+                BadgeList.Clear;
+              end;
             charactername := Trim(Copy(tempstring, length(welcome)));
             username := AppendPathDelim(outputdir) + RemoveSpecialChars(charactername) + '.txt';
             OutputStrings.Append('Starting badges for ' + charactername);
             If fileexists(username) then BadgeList.LoadFromFile(username);
+            orphan := false;
           end
          else if AnsiStartsStr(welcome2, tempstring) then
           begin
-            BadgeList.SaveToFile(username);
-            BadgeList.Clear;
+            if not orphan then
+              begin
+                BadgeList.SaveToFile(username);
+                BadgeList.Clear;
+              end;
             charactername := Trim(Copy(tempstring, length(welcome2)));
             username := AppendPathDelim(outputdir) + RemoveSpecialChars(charactername) + '.txt';
             OutputStrings.Append('Starting badges for ' + charactername);
             If fileexists(username) then BadgeList.LoadFromFile(username);
+            orphan := false;
           end;
 
         if AnsiStartsStr(badgeearned, tempstring) then
           begin
             tempstr2 := Copy(tempstring, length(badgeearned));
             badge := (Trim(copy(tempstr2, 1, length(tempstr2)-7)));
-            BadgeList.Add(GetDisplayForBadge(badge));
+            // odd badge to our orphan list if the character was not set
+            if orphan then orphanedbadges.Add(GetDisplayForBadge(badge))
+            else
+              BadgeList.Add(GetDisplayForBadge(badge));
             OutputStrings.Append(Badge);
           end
         else if AnsiEndsStr(badgetitle, tempstring) then
           begin
             badge := (Trim(Copy(tempstring, 1, length(tempstring) - length(badgeearned))));
-            BadgeList.Add(GetDisplayForBadge(badge));
+            if orphan then orphanedbadges.Add(GetDisplayForBadge(badge))
+            else
+              BadgeList.Add(GetDisplayForBadge(badge));
             OutputStrings.Append(Badge);
           end;
       end;
 
-    Memo1.Lines.Assign(OutputStrings);
     BadgeList.SaveToFile(username);
     logfile.Free;
+
+    //check for any orphaned badges
+    If OrphanedBadges.Count > 0 then
+    begin
+      OrphanBadgeSelect := TOrphanBadgeSelector.Create(nil);
+      try
+        OrphanBadgeSelect.ListBox1.Items.Assign(OrphanedBadges);
+        OrphanBadgeSelect.populateherolist(AppendPathDelim(outputdir));
+        if OrphanBadgeSelect.ShowModal = mrOK then
+        begin
+          OutputStrings.Append('Adding orphaned badges to ' + OrphanBadgeSelect.Caption);
+          // load in badges for selected character and add our orphans to it
+          username := AppendPathDelim(outputdir) + trim(RemoveSpecialChars(OrphanBadgeSelect.ListBox2.GetSelectedText)) + '.txt';
+          BadgeList.Clear;
+          BadgeList.LoadFromFile(username);
+          BadgeList.AddStrings(OrphanedBadges);
+          BadgeList.SaveToFile(username);
+        end
+        else
+          OutputStrings.Append('Canceled adding orphaned badges.');
+
+      OrphanedBadges.Clear;
+      OrphanedBadges.Free;
+      finally
+        FreeAndNil(OrphanBadgeSelect);
+      end;
+
+    end;
+
+    Memo1.Lines.Assign(OutputStrings);
+    BadgeList.Clear;
     OutputStrings.Clear;
     OutputStrings.Free;
 
