@@ -38,6 +38,7 @@ type
     procedure ReportBadges(const badgetype: string);
     procedure ReportExpBadges;
     procedure ReportTotals;
+    function validbadge(const badge: string): boolean;
   public
     function RemoveSpecialChars(const str: string): string;
     function GetDisplayForBadge(const str: string): string;
@@ -132,10 +133,14 @@ begin
         else if AnsiEndsStr(badgetitle, tempstring) then
           begin
             badge := (Trim(Copy(tempstring, 1, length(tempstring) - length(badgeearned))));
-            if orphan then orphanedbadges.Add(GetDisplayForBadge(badge))
-            else
-              BadgeList.Add(GetDisplayForBadge(badge));
-            OutputStrings.Append(Badge);
+                                                                                // adding some sanity checking to the badge title message
+            if validbadge(badge) then
+            begin
+              if orphan then orphanedbadges.Add(GetDisplayForBadge(badge))
+              else
+                BadgeList.Add(GetDisplayForBadge(badge));
+              OutputStrings.Append(Badge);
+            end;
           end;
       end;
 
@@ -209,7 +214,7 @@ begin
     For I := 0 to badgefile.Count - 1 do
     begin
       badgename := badgefile.Strings[I];
-
+      if validbadge(badgename) then
       //badgename is the displayname, check the DB
       With Data1 do
       begin
@@ -437,6 +442,16 @@ begin
   Memo1.Lines.Add(' ' + inttostr(badgebytype[12]) + ' Invention badges ');
   Memo1.Lines.Add(' ' + inttostr(badgebytype[13]) + ' Ouroboros badges ');
   Memo1.Lines.Add(' ' + inttostr(badgebytype[14]) + ' PVP ');
+end;
+
+function TForm1.validbadge(const badge: string): boolean;
+begin
+  result := true;
+  if (badge = '') or (badge = '.') or
+    (AnsiStartsStr('Reject ', badge))
+
+    then // Reject
+      result := false;
 end;
 
 function TForm1.RemoveSpecialChars(const str: string): string;
