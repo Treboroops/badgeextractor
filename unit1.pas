@@ -170,7 +170,10 @@ begin
 
     end;
 
-    Memo1.Lines.Assign(OutputStrings);
+    Memo1.Enabled := False;
+    Memo1.Lines.addstrings(OutputStrings);
+    Memo1.Enabled := True;
+
     BadgeList.Clear;
     OutputStrings.Clear;
     OutputStrings.Free;
@@ -342,21 +345,25 @@ begin
   end;
 
   tmpstringlist.Add('');
+  Memo1.Enabled := False;
   Memo1.Lines.AddStrings(tmpstringlist);
+  Memo1.Enabled := True;
   tmpstringlist.free;
 end;
 
 procedure TForm1.ReportExpBadges;
 var
-  templist: TStringList;
+  templist: TStringList;  // badges for a specific zone are added here
+  outputlist: TStringList;
   badgeindex: integer;
 begin
   templist := TStringList.Create;
+  outputlist := TStringList.Create;
   try
     // Do exploration badges first
-    Memo1.Lines.add('------------------');
-    Memo1.Lines.add('Exploration Badges');
-    Memo1.Lines.add('------------------');
+    outputlist.add('------------------');
+    outputlist.add('Exploration Badges');
+    outputlist.add('------------------');
     with Data1 do
     begin
       Zones.Active := True; // here is our list of badge zones
@@ -391,18 +398,23 @@ begin
         // if we have badges then list them
         if templist.Count > 0 then
         begin
-          Memo1.Lines.add('');
-          Memo1.Lines.add(' ' + Zones.FieldByName('Description').asString);
+          outputlist.add('');
+          outputlist.add(' ' + Zones.FieldByName('Description').asString);
 
-          Memo1.Lines.AddStrings(templist);
+          outputlist.AddStrings(templist);
           templist.Clear;
         end;
         SQLQuery1.Close;
 
         Zones.Next;
       end;
+      Memo1.Enabled := False;
+      Memo1.Lines.Assign(outputlist);
+      Memo1.Enabled := True;
     end;
   finally
+    outputlist.Clear;
+    outputlist.Free;
     templist.clear;
     templist.Free;
   end;

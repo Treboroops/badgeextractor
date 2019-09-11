@@ -332,7 +332,7 @@ INSERT INTO `badges` VALUES ('False','Servant of Recluse','Former Servant of Rec
 INSERT INTO `badges` VALUES ('False','Arbiter','Arbiter','Accomplishment','Complete the Barracuda Strike Force: Thus Spoke the Reichsman','','','','');
 INSERT INTO `badges` VALUES ('False','Promethean','Promethean','Accomplishment','Complete the Mortimer Kal Strike Force','','','','');
 INSERT INTO `badges` VALUES ('False','Charmer','Charmer','Accomplishment','Complete the Abandoned Sewers Trial','','','','');
-INSERT INTO `badges` VALUES ('False','Liberator of Earth','Liberator / Destroyer of Earth','Accomplishment','Complete the Eden Spire Trial','','','','');
+INSERT INTO `badges` VALUES ('False','Liberator','Liberator / Destroyer of Earth','Accomplishment','Complete the Eden Spire Trial','','','','');
 INSERT INTO `badges` VALUES ('False','Destroyer of Earth','Liberator / Destroyer of Earth','Accomplishment','Complete the Eden Spire Trial','','','','');
 INSERT INTO `badges` VALUES ('False','Transcendent','Transcendent','Accomplishment','Complete the The Cavern of Transcendence Trial','','','','');
 INSERT INTO `badges` VALUES ('False','Pain Killer','Pain Killer','Accomplishment','Complete the Cathedral of Pain trial.','','','','');
@@ -1720,7 +1720,7 @@ INSERT INTO `badges` VALUES ('False','Limited','Limited','Ouroboros','Complete a
 INSERT INTO `badges` VALUES ('False','Demarcated','Demarcated','Ouroboros','Complete a level 46-50 Flashback arc using no temp powers','','','','');
 INSERT INTO `badges` VALUES ('False','Cut-Off','Cut-Off','Ouroboros','Complete a level 40-45 Flashback arc using no Ancillary powers','','','','');
 INSERT INTO `badges` VALUES ('False','Marginalized','Marginalized','Ouroboros','Complete a level 46-50 Flashback arc using no Ancillary powers','','','','');
-INSERT INTO `badges` VALUES ('False','Cliche','Cliche','Ouroboros','Complete a level 1-15 Flashback arc using no inspirations','','','','');
+INSERT INTO `badges` VALUES ('False','Cliché','Cliché','Ouroboros','Complete a level 1-15 Flashback arc using no inspirations','','','','');
 INSERT INTO `badges` VALUES ('False','Unimaginative','Unimaginative','Ouroboros','Complete a level 16-19 Flashback arc using no inspirations','','','','');
 INSERT INTO `badges` VALUES ('False','Flat','Flat','Ouroboros','Complete a level 20-24 Flashback arc using no inspirations','','','','');
 INSERT INTO `badges` VALUES ('False','Unoriginal','Unoriginal','Ouroboros','Complete a level 25-29 Flashback arc using no inspirations','','','','');
@@ -1833,4 +1833,5 @@ INSERT INTO `badges` VALUES ('False','Unshakable','Unshakable','Veteran','Reach 
 INSERT INTO `badges` VALUES ('False','Diligent','Diligent','Veteran','Reach Veteran level 93','','','','');
 INSERT INTO `badges` VALUES ('False','Persistent','Persistent','Veteran','Reach Veteran level 96','','','','');
 INSERT INTO `badges` VALUES ('False','Overpowered','Overpowered','Veteran','Reach Veteran level 99','','','','');
+INSERT INTO `badges` VALUES ('False','Master of the Airwaves','Master / Mistress of the Airwaves','Exploration','Grandville',' ','2726','734','1043');
 COMMIT;

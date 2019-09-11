@@ -138,6 +138,7 @@
         <Filename Value="orphans.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="OrphanBadgeSelector"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit5>
     </Units>
