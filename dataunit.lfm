@@ -84,4 +84,25 @@ object Data1: TData1
     left = 56
     top = 248
   end
+  object SQLQuery2: TSQLQuery
+    FieldDefs = <    
+      item
+        Name = 'DisplayName'
+        DataType = ftString
+      end    
+      item
+        Name = 'Type'
+        DataType = ftString
+      end    
+      item
+        Name = 'Description'
+        DataType = ftString
+      end>
+    Database = DBConnection
+    Transaction = SQLTransaction1
+    ReadOnly = True
+    Params = <>
+    left = 224
+    top = 248
+  end
 end

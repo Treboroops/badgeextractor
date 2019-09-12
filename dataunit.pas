@@ -14,6 +14,7 @@ type
   TData1 = class(TDataModule)
     DBConnection: TSQLite3Connection;
     SQLQuery1: TSQLQuery;
+    SQLQuery2: TSQLQuery;
     SQLTransaction1: TSQLTransaction;
     Zones: TSQLQuery;
     procedure DataModuleCreate(Sender: TObject);

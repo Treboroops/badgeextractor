@@ -37,8 +37,10 @@ type
     totalbadges: integer;
     procedure ReportBadges(const badgetype: string);
     procedure ReportExpBadges;
+    procedure ReportAccolades;
     procedure ReportTotals;
     function validbadge(const badge: string): boolean;
+    procedure splitintobadge(notesstr: string; badges: TStringList);
   public
     function RemoveSpecialChars(const str: string): string;
     function GetDisplayForBadge(const str: string): string;
@@ -287,6 +289,11 @@ begin
       ReportExpBadges;
     end
     else
+    if ComboBox1.ItemIndex = 1 then
+    begin
+      ReportAccolades;
+    end
+    else
       ReportBadges(ComboBox1.Items[ComboBox1.ItemIndex]);
   end;
 end;
@@ -425,6 +432,93 @@ begin
   end;
 end;
 
+procedure TForm1.ReportAccolades;
+var
+  badgeindex: Integer;
+  I: Integer;
+  tmpstringlist: TStringList;
+  tmpstringlist2: TStringList;
+  tmprequirelist: TStringList;
+  tmpstr: string;
+begin
+  tmpstringlist := TStringList.Create;
+  tmpstringlist2 := TStringList.Create;
+  tmprequirelist := TStringList.Create;
+
+  tmpstringlist.add('-----------');
+  tmpstringlist.add('Accolades');
+  tmpstringlist.add('-----------');
+
+  With Data1 do
+  begin
+    SQLQuery1.SQL.text := 'select distinct DisplayName,Description,Notes from '
+        + 'badges where Type = ''Accolade''';
+    SQLQuery1.Open;
+    SQLQuery1.First;
+    while not SQLQuery1.EOF do
+    begin
+      if badgefile.Find(SQLQuery1.FieldByName('DisplayName').asString, badgeindex) then
+      begin
+        // character has this badge
+        //Memo1.Lines.add(' *' + SQLQuery1.FieldByName('DisplayName').asString);
+      end
+      else
+      begin
+        // this badge has not been gained yet
+        tmpstringlist.add('  ' + SQLQuery1.FieldByName('DisplayName').asString);
+        tmpstr := Trim(SQLQuery1.FieldByName('Notes').asString);
+        //if length(tmpstr) > 1 then
+        //tmpstringlist.add('   Requires : ' + tmpstr);
+        tmpstringlist.add('     (' + SQLQuery1.FieldByName('Description').asString + ')');
+
+        // now we have to check for requirements
+        tmprequirelist.clear;
+        splitintobadge(tmpstr, tmprequirelist); // gives our badges to check for
+        tmpstringlist2.clear;
+        for I := 0 to tmprequirelist.Count - 1 do
+        begin
+          //tmpstringlist.add('DB' + tmprequirelist[I]);
+          // get displayname for each badge
+          SQLQuery2.Close;
+          SQLQuery2.SQL.text := 'select DisplayName,Type,Description from badges where Badge = ' + quotedstr(tmprequirelist[I]);
+          SQLQuery2.Open;
+          SQLQuery2.First;
+          if not SQLQuery2.EOF then
+            tmpstr := SQLQuery2.FieldByName('DisplayName').asString
+          else
+            tmpstr := tmprequirelist[I]; // This really should not happen, if this happens the badge was not in the database
+          // check if displayname is in our badge list
+          if not badgefile.Find(tmpstr, badgeindex) then
+          begin
+            // we do not have this badge
+            tmpstringlist2.add('     ' + tmpstr + ',' + SQLQuery2.FieldByName('Type').asString +
+              ',' + SQLQuery2.FieldByName('Description').asString);
+          end;
+          SQLQuery2.Close;
+        end;
+        if tmpstringlist2.Count > 0 then
+        begin
+          tmpstringlist.add('   Require :');
+          tmpstringlist.AddStrings(tmpstringlist2);
+        end;
+        tmpstringlist.add('');
+      end;
+      SQLQuery1.Next;
+    end;
+
+    SQLQuery1.Close;
+  end;
+
+  tmpstringlist.Add('');
+  Memo1.Enabled := False;
+  Memo1.Lines.AddStrings(tmpstringlist);
+  Memo1.Enabled := True;
+  tmpstringlist.free;
+  tmpstringlist2.free;
+  tmprequirelist.clear;
+  tmprequirelist.free;
+end;
+
 procedure TForm1.ReportTotals;
 begin
   Memo1.Lines.Add('Loaded ' + inttostr(totalbadges) + ' badges for ' + Form1.Caption);
@@ -452,6 +546,26 @@ begin
 
     then // Reject
       result := false;
+end;
+
+procedure TForm1.splitintobadge(notesstr: string; badges: TStringList);
+var
+  i: integer;
+begin
+  if (length(notesstr) > 0) then // nothing in it? then nothing needs to be added
+  begin
+    for i := length(notesstr) downto 1 do
+    begin
+      if notesstr[i] = '/' then
+        begin
+          badges.Add(copy(notesstr,i + 1));
+          setlength(notesstr, i - 1);
+        end;
+    end;
+
+    badges.Add(notesstr); // finally add the first badge in the string
+  end;
+
 end;
 
 function TForm1.RemoveSpecialChars(const str: string): string;
