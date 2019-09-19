@@ -146,7 +146,8 @@ begin
           end;
       end;
 
-    BadgeList.SaveToFile(username);
+    if not Orphan then
+      BadgeList.SaveToFile(username);
     logfile.Free;
 
     //check for any orphaned badges
