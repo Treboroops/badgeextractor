@@ -1,4 +1,92 @@
 BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS `zones` (
+	`ID`	INTEGER,
+	`zone`	TEXT,
+	`type`	TEXT,
+	PRIMARY KEY(`ID`)
+);
+INSERT INTO `zones` VALUES (1,'Abandoned Sewer Network','Hero');
+INSERT INTO `zones` VALUES (2,'Abandoned Sewers Trial','Hero');
+INSERT INTO `zones` VALUES (3,'AE Buildings','All');
+INSERT INTO `zones` VALUES (4,'Atlas Park','Hero');
+INSERT INTO `zones` VALUES (5,'Bloody Bay','PVP');
+INSERT INTO `zones` VALUES (6,'Boomtown','Hero');
+INSERT INTO `zones` VALUES (7,'Breakout','Hero');
+INSERT INTO `zones` VALUES (8,'Brickstown','Hero');
+INSERT INTO `zones` VALUES (9,'Cap au Diable','Villain');
+INSERT INTO `zones` VALUES (10,'Cascade Archipelago','Hero');
+INSERT INTO `zones` VALUES (11,'Cimerora','All');
+INSERT INTO `zones` VALUES (12,'Crey''s Folly','Hero');
+INSERT INTO `zones` VALUES (13,'Croatoa','Hero');
+INSERT INTO `zones` VALUES (14,'Dark Astoria','All');
+INSERT INTO `zones` VALUES (15,'Echo: Atlas Park','Hero');
+INSERT INTO `zones` VALUES (16,'Echo: Dark Astoria','All');
+INSERT INTO `zones` VALUES (17,'Echo: Faultline','Hero');
+INSERT INTO `zones` VALUES (18,'Echo: Galaxy City','Hero');
+INSERT INTO `zones` VALUES (19,'Echo: Rikti Crash Site','All');
+INSERT INTO `zones` VALUES (20,'Eden','Hero');
+INSERT INTO `zones` VALUES (21,'Faultline','Hero');
+INSERT INTO `zones` VALUES (22,'Firebase Zulu','Hero');
+INSERT INTO `zones` VALUES (23,'First Ward','All');
+INSERT INTO `zones` VALUES (24,'Founders'' Falls','Hero');
+INSERT INTO `zones` VALUES (25,'Grandville','Villain');
+INSERT INTO `zones` VALUES (26,'Imperial City','All');
+INSERT INTO `zones` VALUES (27,'Independence Port','Hero');
+INSERT INTO `zones` VALUES (28,'Instanced Arena Map','PVP');
+INSERT INTO `zones` VALUES (29,'Instanced Mission','Other');
+INSERT INTO `zones` VALUES (30,'Kings Row','Hero');
+INSERT INTO `zones` VALUES (31,'Mayhem - Atlas Park','Villain');
+INSERT INTO `zones` VALUES (32,'Mayhem - Brickstown','Villain');
+INSERT INTO `zones` VALUES (33,'Mayhem - Founder''s Falls','Villain');
+INSERT INTO `zones` VALUES (34,'Mayhem - Independence Port','Villain');
+INSERT INTO `zones` VALUES (35,'Mayhem - Kings Row','Villain');
+INSERT INTO `zones` VALUES (36,'Mayhem - Peregrine Island','Villain');
+INSERT INTO `zones` VALUES (37,'Mayhem - Skyway City','Villain');
+INSERT INTO `zones` VALUES (38,'Mayhem - Steel Canyon','Villain');
+INSERT INTO `zones` VALUES (39,'Mayhem - Talos Island','Villain');
+INSERT INTO `zones` VALUES (40,'Mercy Island','Villain');
+INSERT INTO `zones` VALUES (41,'Midnighter Club','All');
+INSERT INTO `zones` VALUES (42,'Monster Island','Villain');
+INSERT INTO `zones` VALUES (43,'Multiple Zones','Other');
+INSERT INTO `zones` VALUES (44,'Nerva Archipelago','Villain');
+INSERT INTO `zones` VALUES (45,'Neutropolis','All');
+INSERT INTO `zones` VALUES (46,'Night Ward','All');
+INSERT INTO `zones` VALUES (47,'Nova Praetoria','All');
+INSERT INTO `zones` VALUES (48,'Ouroboros','All');
+INSERT INTO `zones` VALUES (49,'Peregrine Island','Hero');
+INSERT INTO `zones` VALUES (50,'Perez Park','Hero');
+INSERT INTO `zones` VALUES (51,'Pocket D','All');
+INSERT INTO `zones` VALUES (52,'Port Oakes','Villain');
+INSERT INTO `zones` VALUES (53,'Recluse''s Victory','PVP');
+INSERT INTO `zones` VALUES (54,'Rikti War Zone','All');
+INSERT INTO `zones` VALUES (55,'Safeguard - Atlas Park','Hero');
+INSERT INTO `zones` VALUES (56,'Safeguard - Brickstown','Hero');
+INSERT INTO `zones` VALUES (57,'Safeguard - Founder''s Falls','Hero');
+INSERT INTO `zones` VALUES (58,'Safeguard - Independence Port','Hero');
+INSERT INTO `zones` VALUES (59,'Safeguard - Kings Row','Hero');
+INSERT INTO `zones` VALUES (60,'Safeguard - Peregrine Island','Hero');
+INSERT INTO `zones` VALUES (61,'Safeguard - Skyway City','Hero');
+INSERT INTO `zones` VALUES (62,'Safeguard - Steel Canyon','Hero');
+INSERT INTO `zones` VALUES (63,'Safeguard - Talos Island','Hero');
+INSERT INTO `zones` VALUES (64,'Sewer Network','Hero');
+INSERT INTO `zones` VALUES (65,'Sharkhead Isle','Villain');
+INSERT INTO `zones` VALUES (66,'Siren''s Call','PVP');
+INSERT INTO `zones` VALUES (67,'Skyway City','Hero');
+INSERT INTO `zones` VALUES (68,'St. Martial','Villain');
+INSERT INTO `zones` VALUES (69,'Steel Canyon','Hero');
+INSERT INTO `zones` VALUES (70,'Striga Isle','Hero');
+INSERT INTO `zones` VALUES (71,'Talos Island','Hero');
+INSERT INTO `zones` VALUES (72,'Terra Volta','Hero');
+INSERT INTO `zones` VALUES (73,'The Abyss','Villain');
+INSERT INTO `zones` VALUES (74,'The Chantry','Villain');
+INSERT INTO `zones` VALUES (75,'The Hive','Villain');
+INSERT INTO `zones` VALUES (76,'The Hollows','Hero');
+INSERT INTO `zones` VALUES (77,'The Storm Palace','All');
+INSERT INTO `zones` VALUES (78,'Underground Imperial','All');
+INSERT INTO `zones` VALUES (79,'Underground Neutropolis','All');
+INSERT INTO `zones` VALUES (80,'Underground Nova','All');
+INSERT INTO `zones` VALUES (81,'Warburg','PVP');
+INSERT INTO `zones` VALUES (82,'Multiple Locations','Other');
 CREATE TABLE IF NOT EXISTS `badges` (
 	`Achieved`	TEXT,
 	`Badge`	TEXT UNIQUE COLLATE NOCASE,
@@ -1835,4 +1923,14 @@ INSERT INTO `badges` VALUES ('False','Persistent','Persistent','Veteran','Reach 
 INSERT INTO `badges` VALUES ('False','Overpowered','Overpowered','Veteran','Reach Veteran level 99','','','','');
 INSERT INTO `badges` VALUES ('False','Master of the Airwaves','Master / Mistress of the Airwaves','Exploration','Grandville',' ','2726','734','1043');
 INSERT INTO `badges` VALUES ('False','Task Force Abandoner','Task Force Commander','Accolade','Awards +5% Max Health','Citadel''s Assistant/Manticore''s Associate/Numina''s Compatriot/Positron''s Ally/Sister Psyche''s Comrade/Synapse''s Cohort','',NULL,NULL);
+INSERT INTO `badges` VALUES ('False','Nine Times the Victor','Ten Times the Victor','Accomplishment','Defeat Mary MacComber ten times during the Katie Hannon Task Force','','','','');
+INSERT INTO `badges` VALUES ('False','Eight Times the Victor','Ten Times the Victor','Accomplishment','Defeat Mary MacComber ten times during the Katie Hannon Task Force','','','','');
+INSERT INTO `badges` VALUES ('False','Seven Times the Victor','Ten Times the Victor','Accomplishment','Defeat Mary MacComber ten times during the Katie Hannon Task Force','','','','');
+INSERT INTO `badges` VALUES ('False','Six Times the Victor','Ten Times the Victor','Accomplishment','Defeat Mary MacComber ten times during the Katie Hannon Task Force','','','','');
+INSERT INTO `badges` VALUES ('False','Five Times the Victor','Ten Times the Victor','Accomplishment','Defeat Mary MacComber ten times during the Katie Hannon Task Force','','','','');
+INSERT INTO `badges` VALUES ('False','Four Times the Victor','Ten Times the Victor','Accomplishment','Defeat Mary MacComber ten times during the Katie Hannon Task Force','','','','');
+INSERT INTO `badges` VALUES ('False','Thrice the Victor','Ten Times the Victor','Accomplishment','Defeat Mary MacComber ten times during the Katie Hannon Task Force','','','','');
+INSERT INTO `badges` VALUES ('False','Twice the Victor','Ten Times the Victor','Accomplishment','Defeat Mary MacComber ten times during the Katie Hannon Task Force','','','','');
+INSERT INTO `badges` VALUES ('False',NULL,'Ten Times the Victor','Accomplishment','Defeat Mary MacComber ten times during the Katie Hannon Task Force','','','','Three Times The Victor');
+INSERT INTO `badges` VALUES ('False','Once the Victor','Ten Times the Victor','Accomplishment','Defeat Mary MacComber ten times during the Katie Hannon Task Force','','','','');
 COMMIT;
