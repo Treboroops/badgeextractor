@@ -521,9 +521,15 @@ begin
 end;
 
 procedure TForm1.ReportTotals;
+var
+  I: integer;
+  tmpstr: string;
 begin
+  tmpstr := '';
   Memo1.Lines.Add('Loaded ' + inttostr(totalbadges) + ' badges for ' + Form1.Caption);
-  Memo1.Lines.Add(' ' + inttostr(badgebytype[9]) + ' Exploration badges');
+  I := Data1.countbadges('Exploration') - badgebytype[9];
+  if I > 0 then tmpstr := ', ' + inttostr(I) + ' left to collect';
+  Memo1.Lines.Add(' ' + inttostr(badgebytype[9]) + ' Exploration badges' + tmpstr);
   Memo1.Lines.Add(' ' + inttostr(badgebytype[1]) + ' Accolades ');
   Memo1.Lines.Add(' ' + inttostr(badgebytype[2]) + ' Accomplishments ');
   Memo1.Lines.Add(' ' + inttostr(badgebytype[3]) + ' Achievements ');

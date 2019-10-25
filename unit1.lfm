@@ -49,7 +49,6 @@ object Form1: TForm1
     Width = 180
     Enabled = False
     ItemHeight = 0
-    ItemIndex = 0
     Items.Strings = (
       'Select Badge Type'
       'Accolade'
@@ -60,6 +59,7 @@ object Form1: TForm1
       'Day Job'
       'Defeat'
       'Exploration'
+      'Event'
       'Gladiator'
       'History'
       'Invention'
@@ -70,7 +70,6 @@ object Form1: TForm1
     OnChange = ComboBox1Change
     Style = csDropDownList
     TabOrder = 3
-    Text = 'Select Badge Type'
   end
   object Button3: TButton
     Left = 589

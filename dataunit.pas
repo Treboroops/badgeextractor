@@ -15,6 +15,7 @@ type
     DBConnection: TSQLite3Connection;
     SQLQuery1: TSQLQuery;
     SQLQuery2: TSQLQuery;
+    Counter: TSQLQuery;
     SQLTransaction1: TSQLTransaction;
     Zones: TSQLQuery;
     procedure DataModuleCreate(Sender: TObject);
@@ -24,6 +25,7 @@ type
   public
     procedure OpenDatabase;
     procedure CloseDatabase;
+    function countbadges(const badgetype: string): integer;
   end;
 
 var
@@ -59,6 +61,21 @@ begin
   SQLQuery1.Active := False;
   Zones.Active := False;
   DBConnection.Close;
+end;
+
+function TData1.countbadges(const badgetype: string): integer;
+begin
+  // get the number of unique badges for the given badge type
+  Counter.active := false;
+  Counter.SQL.Text:= 'select count(distinct DisplayName) as badgecount from badges where Type = ' +
+    quotedstr(badgetype);
+  Counter.Open;
+  try
+    Counter.first;
+    result := Counter.FieldByName('badgecount').AsInteger;
+  finally
+    Counter.close;
+  end;
 end;
 
 end.

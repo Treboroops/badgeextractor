@@ -105,4 +105,17 @@ object Data1: TData1
     left = 224
     top = 248
   end
+  object Counter: TSQLQuery
+    FieldDefs = <    
+      item
+        Name = 'badgecount'
+        DataType = ftInteger
+      end>
+    Database = DBConnection
+    Transaction = SQLTransaction1
+    ReadOnly = True
+    Params = <>
+    left = 400
+    top = 248
+  end
 end
