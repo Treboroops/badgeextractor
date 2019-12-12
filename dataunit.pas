@@ -5,7 +5,7 @@ unit dataunit;
 interface
 
 uses
-  Classes, SysUtils, sqlite3conn, sqldblib, sqldb, FileUtil, sqlite3dyn;
+  Classes, SysUtils, sqlite3conn, sqldb, FileUtil, sqlite3dyn;
 
 type
 

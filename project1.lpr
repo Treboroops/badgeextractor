@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, Unit1, LibXmlParserU, dataunit, Unit2, orphans;
+  Forms, Unit1, dataunit, Unit2, orphans;
 
 {$R *.res}
 

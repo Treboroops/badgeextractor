@@ -6,21 +6,25 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, IniPropStorage, StrUtils, dataunit, Unit2, LazFileUtils, orphans;
+  ExtCtrls, IniPropStorage, ComCtrls, Buttons, StrUtils, dataunit, Unit2,
+  LazFileUtils, orphans, badgemiscutils;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
+    BitBtn1: TBitBtn;
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
     ComboBox1: TComboBox;
+    ImageList1: TImageList;
     IniPropStorage1: TIniPropStorage;
     Memo1: TMemo;
     OpenChatDialog: TOpenDialog;
     OpenReportDialog: TOpenDialog;
+    procedure BitBtn1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -29,7 +33,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
-    BadgeList: TStringList;
+    //BadgeList: TStringList;
     badgefile: TStringList;
     chatlogdir: string;
     outputdir: string;
@@ -41,8 +45,8 @@ type
     procedure ReportTotals;
     function validbadge(const badge: string): boolean;
     procedure splitintobadge(notesstr: string; badges: TStringList);
+    function processlogfile(filename, lastcharacter: string; promptorphan: boolean): string;
   public
-    function RemoveSpecialChars(const str: string): string;
     function GetDisplayForBadge(const str: string): string;
   end;
 
@@ -72,8 +76,12 @@ var
   orphan: boolean;
   orphanedbadges: TStringList;
   OrphanBadgeSelect: TOrphanBadgeSelector;
+  BadgeList: TStringList;
 begin
   orphan := true;
+  BadgeList := TStringList.Create;
+  BadgeList.Sorted := True;
+  BadgeList.Duplicates := dupIgnore;
 
   OpenChatDialog.InitialDir := chatlogdir;
   if OpenChatDialog.Execute then
@@ -183,10 +191,74 @@ begin
     Memo1.Enabled := True;
 
     BadgeList.Clear;
+    BadgeList.Free;
     OutputStrings.Clear;
     OutputStrings.Free;
 
     Data1.CloseDatabase;
+  end;
+end;
+
+procedure TForm1.BitBtn1Click(Sender: TObject);
+var
+  logfiles: TStringList;
+  I, slen: integer;
+  lastlog: Tlogday; // these are the year/month/day of the last logfile processed
+  alog: Tlogday;
+  lasthero: string; // last hero processed, not needed if the last logfile read is still there
+begin
+  Memo1.Clear;
+  // here we need to search all the logfiles, from the last we read. Save the last
+  // character played and logfile read in.
+  // first check that the logfile directory has been set and exists
+  if not directoryexists(chatlogdir) then
+  begin
+    // no directory.. get one
+    { TODO : get the user to set a logfile directory here }
+  end
+  else
+  begin
+    lastlog.year := IniPropStorage1.ReadInteger('lastyear', 2000);
+    lastlog.month := IniPropStorage1.ReadInteger('lastmonth', 1);
+    lastlog.day := IniPropStorage1.ReadInteger('lastday', 1);
+    lasthero := IniPropStorage1.ReadString('lasthero', '');
+    alog := lastlog;
+    // ok, so we get all txt files from there
+    // files are in the format 'chatlog YYYY-MM-DD.txt', ignore anything that doesn't match
+    logfiles := TStringList.Create;
+    try
+      findallfiles(logfiles, chatlogdir, 'chatlog*.txt', false);
+      logfiles.Sort;
+
+      // now we look through the logs for the last one read
+      // if its still there we read it; ignoring orphan badges
+      // if its not we move to the next one adding orphan badges to 'lasthero'
+      // unless lasthero is '' where we ignore orphans again
+      for I := 0 to logfiles.Count - 1 do
+      begin
+        Memo1.Append(logfiles.Strings[I]);
+        // extract the date from the filename
+        slen := length(logfiles.Strings[I]);
+        alog.year := strtoint(copy(logfiles.Strings[I], slen - 13, 4));
+        alog.month := strtoint(copy(logfiles.Strings[I], slen - 8, 2));
+        alog.day := strtoint(copy(logfiles.Strings[I], slen - 5, 2));
+
+        if checkdate(lastlog, alog) then // this file is the last or newer so process it
+        begin
+          Memo1.Append('processing file');
+          lasthero := processlogfile(logfiles.Strings[I], lasthero, false);
+        end;
+      end;
+
+      IniPropStorage1.WriteInteger('lastyear', alog.year);
+      IniPropStorage1.WriteInteger('lastmonth', alog.month);
+      IniPropStorage1.WriteInteger('lastday', alog.day);
+      IniPropStorage1.WriteString('lasthero', lasthero);
+    finally
+      logfiles.Clear;
+      logfiles.Free;
+    end;
+
   end;
 end;
 
@@ -302,15 +374,11 @@ end;
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   IniPropStorage1.Save;
-  BadgeList.Free;
   badgefile.free;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  BadgeList := TStringList.create;
-  BadgeList.Sorted := True;
-  BadgeList.Duplicates := dupIgnore;
   badgefile := TStringList.Create;
 end;
 
@@ -575,22 +643,169 @@ begin
 
 end;
 
-function TForm1.RemoveSpecialChars(const str: string): string;
+function TForm1.processlogfile(filename, lastcharacter: string; promptorphan: boolean): string;
 const
-  InvalidChars : set of char =
-    [',','.','/','!','@','#','$','%','^','&','*','''','"',';','_','(',')',':','|','[',']'];
+  welcome: string = 'Welcome to City of Heroes, ';
+  welcome2: string = 'Now entering the Rogue Isles, ';
+  badgeearned: string = 'Congratulations! You earned the ';
+  badgetitle: string = ' has been selected as new title.';
 var
-  i, Count: Integer;
+  tempstring: string;
+  tempstr2: string;
+  username, charactername: string;
+  badge: string;
+  I: integer;
+  logfile: TStringList;
+  outputstrings: TStringList;
+  orphan: boolean;
+  orphanedbadges: TStringList;
+  OrphanBadgeSelect: TOrphanBadgeSelector;
+  BadgeList: TStringList;
 begin
-  SetLength(Result, Length(str));
-  Count := 0;
-  for i := 1 to Length(str) do
-    if not (str[i] in InvalidChars) then
+  logfile := TStringList.Create;
+  orphan := true;
+  outputstrings := TStringList.Create;
+  BadgeList := TStringList.Create;
+  BadgeList.Sorted := True;
+  BadgeList.Duplicates := dupIgnore;
+
+  if lastcharacter <> '' then
+  begin
+    orphan := false;
+    charactername := lastcharacter;
+    username := AppendPathDelim(outputdir) + RemoveSpecialChars(charactername) + '.txt';
+    If fileexists(username) then
     begin
-      inc(Count);
-      Result[Count] := str[i];
+      BadgeList.LoadFromFile(username);
+      outputstrings.Append('Loading in file from lastcharacter ' + username + ' : ' + inttostr(BadgeList.Count));
     end;
-  SetLength(Result, Count);
+  end;
+
+  //OpenChatDialog.InitialDir := chatlogdir;
+  if fileexists(filename) then
+  begin
+    //Memo1.Clear;
+    Data1.OpenDatabase;
+
+    orphanedbadges := TStringList.Create;
+    orphanedbadges.Sorted := True;
+    logfile.LoadFromFile(filename);
+
+    // look for badges
+    For I := 0 to logfile.Count - 1 do
+      begin
+        tempstring := copy(logfile.Strings[I],21);
+
+        //now we check each string looking for specific messages
+        if AnsiStartsStr(welcome, tempstring) then
+          begin
+            if not orphan then
+              begin
+                outputstrings.Append('Saving badgelist ' + username);
+                BadgeList.SaveToFile(username);
+                BadgeList.Clear;
+              end;
+            charactername := Trim(Copy(tempstring, length(welcome)));
+            username := AppendPathDelim(outputdir) + RemoveSpecialChars(charactername) + '.txt';
+            OutputStrings.Append('Starting badges for ' + charactername);
+            If fileexists(username) then
+              begin
+                BadgeList.LoadFromFile(username);
+                OutputStrings.Append('Loading badge list ' + username);
+              end;
+            orphan := false;
+          end
+         else if AnsiStartsStr(welcome2, tempstring) then
+          begin
+            if not orphan then
+              begin
+                outputstrings.Append('Saving badgelist ' + username);
+                BadgeList.SaveToFile(username);
+                BadgeList.Clear;
+              end;
+            charactername := Trim(Copy(tempstring, length(welcome2)));
+            username := AppendPathDelim(outputdir) + RemoveSpecialChars(charactername) + '.txt';
+            OutputStrings.Append('Starting badges for ' + charactername);
+            If fileexists(username) then
+              begin
+                BadgeList.LoadFromFile(username);
+                OutputStrings.Append('Loading badge list ' + username);
+              end;
+            orphan := false;
+          end;
+
+        if AnsiStartsStr(badgeearned, tempstring) then
+          begin
+            tempstr2 := Copy(tempstring, length(badgeearned));
+            badge := (Trim(copy(tempstr2, 1, length(tempstr2)-7)));
+            // odd badge to our orphan list if the character was not set
+            if orphan then orphanedbadges.Add(GetDisplayForBadge(badge))
+            else
+              BadgeList.Add(GetDisplayForBadge(badge));
+            OutputStrings.Append(Badge);
+          end
+        else if AnsiEndsStr(badgetitle, tempstring) then
+          begin
+            badge := (Trim(Copy(tempstring, 1, length(tempstring) - length(badgeearned))));
+                                                                                // adding some sanity checking to the badge title message
+            if validbadge(badge) then
+            begin
+              if orphan then orphanedbadges.Add(GetDisplayForBadge(badge))
+              else
+                BadgeList.Add(GetDisplayForBadge(badge));
+              OutputStrings.Append(Badge);
+            end;
+          end;
+      end;
+
+    if not Orphan then
+    begin
+      BadgeList.SaveToFile(username);
+      OutputStrings.Append('Saved badges to ' + username);
+    end;
+    logfile.clear;
+
+    //check for any orphaned badges
+    If (OrphanedBadges.Count > 0) and promptorphan then
+    begin
+      OrphanBadgeSelect := TOrphanBadgeSelector.Create(nil);
+      try
+        OrphanBadgeSelect.ListBox1.Items.Assign(OrphanedBadges);
+        OrphanBadgeSelect.populateherolist(AppendPathDelim(outputdir));
+        if OrphanBadgeSelect.ShowModal = mrOK then
+        begin
+          OutputStrings.Append('Adding orphaned badges to ' + OrphanBadgeSelect.Caption);
+          // load in badges for selected character and add our orphans to it
+          username := AppendPathDelim(outputdir) + trim(RemoveSpecialChars(OrphanBadgeSelect.ListBox2.GetSelectedText)) + '.txt';
+          BadgeList.Clear;
+          BadgeList.LoadFromFile(username);
+          BadgeList.AddStrings(OrphanedBadges);
+          BadgeList.SaveToFile(username);
+        end
+        else
+          OutputStrings.Append('Canceled adding orphaned badges.');
+
+      OrphanedBadges.Clear;
+      OrphanedBadges.Free;
+      finally
+        FreeAndNil(OrphanBadgeSelect);
+      end;
+
+    end;
+
+    Memo1.Enabled := False;
+    Memo1.Lines.addstrings(OutputStrings);
+    Memo1.Enabled := True;
+
+    Data1.CloseDatabase;
+  end;
+
+  BadgeList.Clear;
+  BadgeList.Free;
+  OutputStrings.Clear;
+  OutputStrings.Free;
+  logfile.free;
+  result := RemoveSpecialChars(charactername);
 end;
 
 function TForm1.GetDisplayForBadge(const str: string): string;

@@ -4,7 +4,7 @@ object Data1: TData1
   OldCreateOrder = False
   Height = 503
   HorizontalOffset = 1124
-  VerticalOffset = 343
+  VerticalOffset = 375
   Width = 516
   PPI = 96
   object DBConnection: TSQLite3Connection
